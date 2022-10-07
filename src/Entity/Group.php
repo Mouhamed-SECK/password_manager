@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\RoleRepository;
+use App\Repository\GroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: RoleRepository::class)]
-class Role
+#[ORM\Entity(repositoryClass: GroupRepository::class)]
+#[ORM\Table(name: '`group`')]
+class Group
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,12 +17,9 @@ class Role
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $label = null;
+    private ?string $title = null;
 
-    #[ORM\OneToOne(mappedBy: 'relation', cascade: ['persist', 'remove'])]
-    private ?User $user = null;
-
-    #[ORM\OneToMany(mappedBy: 'role', targetEntity: User::class)]
+    #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: User::class)]
     private Collection $users;
 
     public function __construct()
@@ -34,31 +32,14 @@ class Role
         return $this->id;
     }
 
-    public function getLabel(): ?string
+    public function getTitle(): ?string
     {
-        return $this->label;
+        return $this->title;
     }
 
-    public function setLabel(string $label): self
+    public function setTitle(string $title): self
     {
-        $this->label = $label;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): self
-    {
-        // set the owning side of the relation if necessary
-        if ($user->getRelation() !== $this) {
-            $user->setRelation($this);
-        }
-
-        $this->user = $user;
+        $this->title = $title;
 
         return $this;
     }
@@ -75,7 +56,7 @@ class Role
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            $user->setRole($this);
+            $user->setGroupe($this);
         }
 
         return $this;
@@ -85,8 +66,8 @@ class Role
     {
         if ($this->users->removeElement($user)) {
             // set the owning side to null (unless already changed)
-            if ($user->getRole() === $this) {
-                $user->setRole(null);
+            if ($user->getGroupe() === $this) {
+                $user->setGroupe(null);
             }
         }
 

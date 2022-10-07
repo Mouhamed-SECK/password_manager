@@ -34,6 +34,8 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -122,4 +124,31 @@ class User
 
         return $this;
     }
+
+
+    public function getGroupe(): ?group
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?group $groupe): self
+    {
+        $this->groupe = $groupe;
+
+        return $this;
+    }
+
+    public function getRole(): ?role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?role $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+  
 }
