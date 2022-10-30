@@ -17,10 +17,6 @@ class AdminGroupController extends AbstractController
 
     private $repository;
     private $manager;
-   
-
-
- 
 
     public function __construct(GroupeRepository $repository, EntityManagerInterface $manager)
     {
@@ -34,6 +30,8 @@ class AdminGroupController extends AbstractController
     public function index(Request $request, EntityManagerInterface $manager): Response
     {
         $groupe = new Groupe();
+
+        $allGroups = $this->repository->findAll();
 
         $form =  $this->createForm(GroupType::class, $groupe);  
         $form->handleRequest($request) ;
@@ -53,6 +51,7 @@ class AdminGroupController extends AbstractController
         return $this->render('admin/group/group.html.twig', [
             'controller_name' => 'AdminGroupController',
             'form' => $form->createView(),
+            'groups' => $allGroups,
         ]);
     }
 }

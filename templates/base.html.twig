@@ -45,9 +45,12 @@
                     <a class="m-link active" data-bs-toggle="collapse" data-bs-target="#emp-Components" href="#"><i
                             class="icofont-users-alt-5"></i> <span>Utilisateurs</span> <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
                     <!-- Menu: Sub menu ul -->
-                    <ul class="sub-menu collapse" id="emp-Components">
-                        <li><a class="ms-link active" href="{{path('admin.users.index')}}"> <span>Comptes</span></a></li>
-                        <li><a class="ms-link"  href="{{path('admin.group.index')}}"> <span>Groupe</span></a></li>
+                    <ul class="sub-menu collapse show" id="emp-Components">
+                        <li><a class="ms-link active"  href="{{path('admin.group.index')}}"> <span>Groupe</span></a></li>
+
+                        <li><a class="ms-link " href="{{path('admin.users.index')}}"> <span>Comptes</span></a></li>
+                        <li><a class="ms-link"  href="{{path('admin.users.new')}}"> <span>Creer nouveau utilisateur</span></a></li>
+
                     </ul>
                 </li>
                
@@ -55,7 +58,7 @@
                     <a class="m-link " data-bs-toggle="collapse" data-bs-target="#menu-Componentsoneone" href="#"><i
                             class="icofont-ui-calculator"></i> <span>Accounts</span> <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
                     <!-- Menu: Sub menu ul -->
-                    <ul class="sub-menu collapse show" id="menu-Componentsoneone">
+                    <ul class="sub-menu collapse " id="menu-Componentsoneone">
                         <li><a class="ms-link" href="invoices.html"><span>Invoices</span> </a></li>
                         <li><a class="ms-link" href="payments.html"><span>Payments</span> </a></li>
                         <li><a class="ms-link " href="expenses.html"><span>Expenses</span> </a></li>

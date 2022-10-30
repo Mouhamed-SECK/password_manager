@@ -33,8 +33,12 @@ class User
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
-    #[ORM\ManyToMany(targetEntity: role::class, inversedBy: 'userRoles')]
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'userRoles')]
     private Collection $roles;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Groupe $groupe = null;
 
     public function __construct()
     {
@@ -142,6 +146,18 @@ class User
     public function removeRole(role $role): self
     {
         $this->roles->removeElement($role);
+
+        return $this;
+    }
+
+    public function getGroupe(): ?groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?groupe $groupe): self
+    {
+        $this->groupe = $groupe;
 
         return $this;
     }
