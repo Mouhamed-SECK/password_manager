@@ -6,9 +6,10 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -33,16 +34,18 @@ class User
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
-    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'userRoles')]
-    private Collection $roles;
+
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Groupe $groupe = null;
 
+    #[ORM\Column]
+    private array $roles = [];
+
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
+       
     }
 
     public function getId(): ?int
@@ -122,33 +125,34 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection<int, role>
+     /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
      */
-    public function getRoles(): Collection
+    public function getUsername(): string
     {
-        $roles = $this->userRoles->map(function ($role) {
-            return $role->getTitle();
-        })->toArray();
-        $roles[] = 'ROLE_USER';
-        return $roles;
+        return (string) $this->login;
     }
 
-    public function addRole(role $role): self
-    {
-        if (!$this->roles->contains($role)) {
-            $this->roles->add($role);
-        }
 
-        return $this;
+     /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
-    public function removeRole(role $role): self
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
     {
-        $this->roles->removeElement($role);
-
-        return $this;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
+
 
     public function getGroupe(): ?groupe
     {
@@ -161,4 +165,24 @@ class User
 
         return $this;
     }
+
+   /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
 }
