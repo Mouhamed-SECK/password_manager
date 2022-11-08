@@ -6,6 +6,7 @@ use App\Repository\GroupeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GroupeRepository::class)]
 class Groupe
@@ -20,6 +21,11 @@ class Groupe
 
     #[ORM\OneToMany(mappedBy: 'Groupe', targetEntity: User::class)]
     private Collection $users;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $privateKey;
+
+
 
     public function getId(): ?int
     {
@@ -73,6 +79,18 @@ class Groupe
                 $user->setGroupe(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrivateKey(): ?string
+    {
+        return $this->privateKey;
+    }
+
+    public function setPrivateKey(string $privateKey): self
+    {
+        $this->privateKey = $privateKey;
 
         return $this;
     }
