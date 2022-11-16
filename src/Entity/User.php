@@ -47,9 +47,12 @@ class User implements UserInterface, TwoFactorInterface
     #[ORM\Column]
     private array $roles = [];
 
+    #[ORM\OneToMany(mappedBy: 'groupAdmin', targetEntity: Groupe::class)]
+    private $groupes;
+
     public function __construct()
     {
-       
+        $this->groupes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -211,6 +214,36 @@ class User implements UserInterface, TwoFactorInterface
     public function setEmailAuthCode(string $authCode): void
     {
         $this->authCode = $authCode;
+    }
+
+    /**
+     * @return Collection<int, Groupe>
+     */
+    public function getGroupes(): Collection
+    {
+        return $this->groupes;
+    }
+
+    public function addGroupe(Groupe $groupe): self
+    {
+        if (!$this->groupes->contains($groupe)) {
+            $this->groupes[] = $groupe;
+            $groupe->setGroupAdmin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupe(Groupe $groupe): self
+    {
+        if ($this->groupes->removeElement($groupe)) {
+            // set the owning side to null (unless already changed)
+            if ($groupe->getGroupAdmin() === $this) {
+                $groupe->setGroupAdmin(null);
+            }
+        }
+
+        return $this;
     }
 
 }

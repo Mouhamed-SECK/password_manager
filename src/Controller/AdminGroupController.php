@@ -36,43 +36,12 @@ class AdminGroupController extends AbstractController
     #[Route('/admin/groups', name: 'admin.group.index')]
     public function index(Request $request, EntityManagerInterface $manager): Response
     {
-        $groupe = new Groupe();
-
+       
         $allGroups = $this->repository->findAll();
 
+        $groupe = new Groupe();
+
         $form =  $this->createForm(GroupType::class, $groupe);  
-        $form->handleRequest($request) ;
-
-        if ($form->isSubmitted() && $form->isValid()) { 
-
-            $uuid = Uuid::v1();
-        
-            $ciphering = "AES-128-CTR";
-  
-            // Use OpenSSl Encryption method
-            $iv_length = openssl_cipher_iv_length($ciphering);
-            $options = 0;
-            
-            // Non-NULL Initialization Vector for encryption
-            $encryption_iv = '1234567891011121';
-            
-            // Store the encryption key
-            $encryption_key = "GeeksforGeeks";
-            $user = $this->get('security.token_storage')->getToken()->getUser();
-            
-           
-            if ($this->passwordEncoder->isPasswordValid($user, $groupe->getPrivateKey())) {
-                $groupe->setPrivateKey(openssl_encrypt($uuid, $ciphering, $groupe->getPrivateKey() , $options, $encryption_iv));
-            } else {
-                dd("Erreur pwd");
-            }
-         
-            $manager->persist($groupe);
-            $manager->flush();
-
-            return $this->redirectToRoute('admin.group.index');
-
-        }
 
         return $this->render('admin/group/group.html.twig', [
             'controller_name' => 'AdminGroupController',
@@ -80,4 +49,52 @@ class AdminGroupController extends AbstractController
             'groups' => $allGroups,
         ]);
     }
+
+
+    #[Route('/admin/groups/verify', name: 'admin.group.verify')]
+    public function verify(Request $request, EntityManagerInterface $manager): Response
+    {
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+        $isCorrectPassword = $this->passwordEncoder->isPasswordValid($user, $data['password']);
+
+
+
+        return $this->json(['code' => 200, 'isCorrectPassword' => $isCorrectPassword], 200);
+    }
+
+
+    #[Route('/admin/groups/save', name: 'admin.group.save')]
+    public function save(Request $request, EntityManagerInterface $manager): Response
+    {
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $groupe = new Groupe();
+
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+        $groupe->setPrivateKey($data['groupKey']);
+        $groupe->setTitle($data['title']);
+        $groupe->setGroupAdmin($user);
+
+        $manager->persist($groupe);
+        $manager->flush();
+
+        return $this->json(['code' => 200, 'success' => TRUE], 200);
+    }
+
+
+
+
+
+
 }
+
+

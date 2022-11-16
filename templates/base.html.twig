@@ -12,6 +12,8 @@
         <link rel="stylesheet" href="/assets/plugin/datatables/dataTables.bootstrap5.min.css">
         <!-- project css file  -->
         <link rel="stylesheet" href="/assets/css/my-task.style.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -239,7 +241,10 @@
 <script src="/assets/bundles/dataTables.bundle.js"></script>
 
 <!-- Jquery Page Js -->
-<script src="../js/template.js"></script>
+<script src="/js/template.js"></script>
+
+
+
 <script>
     // project data table
     $(document).ready(function() {
