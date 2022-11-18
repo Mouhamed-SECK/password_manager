@@ -19,11 +19,16 @@ class Groupe
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    private ?string $privateKey = null;
+
     #[ORM\OneToMany(mappedBy: 'Groupe', targetEntity: User::class)]
     private Collection $users;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'groupes')]
     private $groupAdmin;
+
+
+
 
 
 
@@ -88,6 +93,12 @@ class Groupe
     public function getGroupAdmin(): ?User
     {
         return $this->groupAdmin;
+    }
+
+
+    public function getPrivateKey(): ?User
+    {
+        return $this->privateKey;
     }
 
     public function setGroupAdmin(?User $groupAdmin): self

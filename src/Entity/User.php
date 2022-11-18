@@ -57,7 +57,7 @@ class User implements UserInterface, TwoFactorInterface
     private $isKeyChange =false;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $privateKey;
+    private $privateKey =  "temporary";
 
     public function __construct()
     {
