@@ -38,7 +38,8 @@ class User implements UserInterface, TwoFactorInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
-
+    #[ORM\Column(type: 'string', length: 100)]
+    private $resetToken;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
@@ -137,6 +138,18 @@ class User implements UserInterface, TwoFactorInterface
     public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
 
         return $this;
     }

@@ -35,13 +35,11 @@
             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="required">
         </div>
 
-         <a href="#" class="forgot-link">Forgot Password?</a>
+        <a href="{{ path('forgotten_password') }}" class="forgot-link">Forgot Password?</a>
 
-           <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
      
-        <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login">              
+        <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login">           
     </form>			
 
     </div>
