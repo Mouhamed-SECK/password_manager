@@ -22,9 +22,6 @@ class Groupe
     #[ORM\OneToMany(mappedBy: 'Groupe', targetEntity: User::class)]
     private Collection $users;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $privateKey;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'groupes')]
     private $groupAdmin;
 
@@ -86,17 +83,7 @@ class Groupe
         return $this;
     }
 
-    public function getPrivateKey(): ?string
-    {
-        return $this->privateKey;
-    }
-
-    public function setPrivateKey(string $privateKey): self
-    {
-        $this->privateKey = $privateKey;
-
-        return $this;
-    }
+ 
 
     public function getGroupAdmin(): ?User
     {

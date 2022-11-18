@@ -33,7 +33,7 @@ class User implements UserInterface, TwoFactorInterface
     private ?string $login = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $password = null;
+    private ?string $password = "temporary";
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
@@ -49,6 +49,15 @@ class User implements UserInterface, TwoFactorInterface
 
     #[ORM\OneToMany(mappedBy: 'groupAdmin', targetEntity: Groupe::class)]
     private $groupes;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isKeyChange =false;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $privateKey;
 
     public function __construct()
     {
@@ -242,6 +251,42 @@ class User implements UserInterface, TwoFactorInterface
                 $groupe->setGroupAdmin(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function isIsKeyChange(): ?bool
+    {
+        return $this->isKeyChange;
+    }
+
+    public function setIsKeyChange(bool $isKeyChange): self
+    {
+        $this->isKeyChange = $isKeyChange;
+
+        return $this;
+    }
+
+    public function getPrivateKey(): ?string
+    {
+        return $this->privateKey;
+    }
+
+    public function setPrivateKey(string $privateKey): self
+    {
+        $this->privateKey = $privateKey;
 
         return $this;
     }
