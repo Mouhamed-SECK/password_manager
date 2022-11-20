@@ -2,10 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Password Manager{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        
-          <title>MY-Password</title>
+        <title>MY-Password</title>
         <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Favicon-->
         <!-- plugin css file  -->
         <link rel="stylesheet" href="/assets/plugin/datatables/responsive.dataTables.min.css">
@@ -13,16 +12,9 @@
         <!-- project css file  -->
         <link rel="stylesheet" href="/assets/css/my-task.style.min.css">
 
-        {% if  controller_name == 'login' %}
-
-                <link rel="stylesheet" href="/assets/css/login.css">
-
-        {% endif %}
-
-
+      
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -51,11 +43,11 @@
           
                 <li class="collapsed">
                     <a class="m-link active" data-bs-toggle="collapse" data-bs-target="#emp-Components" href="#"><i
-                            class="icofont-users-alt-5"></i> <span>Utilisateurs</span> <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span></a>
+                            class="icofont-users-alt-5"></i> <span>Utilisateurs</span> <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
+                    </a>
                     <!-- Menu: Sub menu ul -->
                     <ul class="sub-menu collapse show" id="emp-Components">
                         <li><a class="ms-link active"  href="{{path('admin.group.index')}}"> <span>Groupe</span></a></li>
-
                         <li><a class="ms-link " href="{{path('admin.users.index')}}"> <span>Comptes</span></a></li>
                         <li><a class="ms-link"  href="{{path('admin.users.new')}}"> <span>Creer nouveau utilisateur</span></a></li>
 
@@ -68,13 +60,8 @@
                     <!-- Menu: Sub menu ul -->
                     <ul class="sub-menu collapse " id="menu-Componentsoneone">
                         <li><a class="ms-link" href="invoices.html"><span>Invoices</span> </a></li>
-                        <li><a class="ms-link" href="payments.html"><span>Payments</span> </a></li>
-                        <li><a class="ms-link " href="expenses.html"><span>Expenses</span> </a></li>
                     </ul>
                 </li>
-              
-             
-             
             </ul>
 
             <!-- Menu: menu collepce btn -->
@@ -113,7 +100,7 @@
                                 <small>{{ app.user.email }}</small>
                             </div>
                             <a class="nav-link dropdown-toggle pulse p-0" href="#" role="button" data-bs-toggle="dropdown" data-bs-display="static">
-                                <img class="avatar lg rounded-circle img-thumbnail" src="assets/images/profile_av.png" alt="profile">
+                                <img class="avatar lg rounded-circle img-thumbnail" src="/assets/images/profile_av.png" alt="profile">
                             </a>
                             <div class="dropdown-menu rounded-lg shadow border-0 dropdown-animation dropdown-menu-end p-0 m-0">
                                 <div class="card border-0 w280">
@@ -126,10 +113,12 @@
                                             </div>
                                         </div>
                                         
-                                        <div><hr class="dropdown-divider border-dark"></div>
+                                        <div>
+                                            <hr class="dropdown-divider border-dark">
+                                        </div>
                                     </div>
                                     <div class="list-group m-2 ">
-                                        <a href="task.html" class="list-group-item list-group-item-action border-0 "><i class="icofont-tasks fs-5 me-3"></i>My Task</a>
+                                        <a href="task.html" class="list-group-item list-group-item-action border-0 "><i class="icofont-tasks fs-5 me-3"></i>My Passwords</a>
                                         <a href="members.html" class="list-group-item list-group-item-action border-0 "><i class="icofont-ui-user-group fs-6 me-3"></i>members</a>
                                         <a href="ui-elements/auth-signin.html" class="list-group-item list-group-item-action border-0 "><i class="icofont-logout fs-6 me-3"></i>Signout</a>
                                         <div><hr class="dropdown-divider border-dark"></div>
@@ -159,8 +148,6 @@
         </div>
 
  {% endif %}
-
-    
         {% block body %}{% endblock %}
 
         </div><!-- Jquery Core Js -->

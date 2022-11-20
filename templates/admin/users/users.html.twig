@@ -25,12 +25,12 @@
                                     <thead>
                                         <tr>
                                             <th>User Id</th>
-                                            <th>FirstName</th>
-                                            <th>LastName</th> 
+                                            <th>User</th>
                                             <th>Email</th>
                                             <th>Groupe</th>
 
                                             <th>Role</th>  
+                                            <th>Status</th>  
                                             <th>Actions</th>  
                                         </tr>
                                     </thead>
@@ -46,11 +46,10 @@
                                             </td>
 
                                             <td>
-                                                 {{user.firstName}}
+                                               <img class="avatar rounded-circle" src="/assets/images/xs/avatar1.jpg" alt="">
+                                               <span class="fw-bold ms-1">  {{user.firstName}} {{user.LastName}}</span>
                                            </td>
 
-                                           <td>
-                                              {{user.LastName}}
                                            </td>
                                            
                                            <td>
@@ -61,7 +60,24 @@
                                             </td>
     
                                             <td>
-                                                {{user.roles | join(' ')}}
+                                                {% if 'ROLE_SUPER_ADMIN' in user.roles %}
+                                                    <span class="badge bg-primary">Super Admin</span>
+                                                {% elseif 'ROLE_ADMIN' in user.roles %}
+                                                    <span class="badge bg-info">Admin</span>
+                                                {% else %}
+                                                     <span class="badge bg-warning">User</span>
+                                                {% endif %}
+                                
+
+                                            </td>
+
+                                             <td>
+                                                {% if user.isVerified %}
+                                                    <span class="badge bg-success">Compte Activé</span>
+                                                {% else %}
+                                                     <span class="badge bg-danger">Compte Inactif</span>
+                                                {% endif %}
+                                
 
                                             </td>
     
