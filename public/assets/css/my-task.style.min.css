@@ -11,3 +11,12 @@
 .form-control:focus {
     border-color: #484c7f; 
 }
+.progress-bar-danger {
+    background-color: #e90f10;
+}
+.progress-bar-warning{
+    background-color: #ffad00;
+}
+.progress-bar-success{
+    background-color: #02b502;
+}

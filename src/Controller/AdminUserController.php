@@ -241,4 +241,12 @@ class AdminUserController extends AbstractController
         $this->addFlash('danger', 'Jeton invalide');
         return $this->redirectToRoute('app_login');
     }
+
+    #[Route('/users/change-temporary-password', name: 'reset_temporary_password')]
+    public function home(): Response
+    {
+        return $this->render('/security/reset_temporary_password.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
 }
