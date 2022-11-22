@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Service\SendEmailService;
+
 
 // Include Library Namespaces
 use Symfony\Component\Uid\Uuid;
@@ -47,6 +49,18 @@ class AdminGroupController extends AbstractController
            
         }
         return $admins;
+
+    }
+
+    private function getChosenAdmin ($users, $email) {
+        foreach ($users as $user) {
+
+            if($user->getEmail() == $email){
+               return $user;
+            }
+           
+        }
+        return false;
 
     }
 
@@ -108,6 +122,7 @@ class AdminGroupController extends AbstractController
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        
 
         $groupe = new Groupe();
 
@@ -122,6 +137,47 @@ class AdminGroupController extends AbstractController
 
         return $this->json(['code' => 200, 'success' => TRUE], 200);
     }
+
+
+    #[Route('/admin/groups/assignGroupAdmin', name: 'admin.group.assignGroupAdmin')]
+    public function assignGroupAdmin(Request $request, EntityManagerInterface $manager,  SendEmailService $mail): Response
+    {
+
+    
+
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+        $groupe = $this->repository->find($data['groupId']);
+        $users =    $this->manager->getRepository(User::class)->findAll();
+
+        $groupe->setPrivateKey($data['newEncryptedKey']);
+
+        $admin = $this->getChosenAdmin($this->getAvailableGroupAdmin($users), $data['email']);
+        $admin->getManagedGroup($groupe);
+        $groupe->setGroupAdmin($admin);
+
+        $title = $groupe->getTitle();
+        $firstname = $admin->getFirstname();
+        $tempKey =  $data['tempKey'];
+
+        // Envoi du mail
+        $mail->send(
+            'no-reply@passwd_manager.fr',
+            $data['email'],
+            'Administration de groupe',
+            'assigneAdmin',
+            compact('title', 'firstname', 'tempKey')
+        );
+
+        $manager->flush();
+
+        return $this->json(['code' => 200, 'success' => TRUE], 200);
+    }
+
+
+
+    
 
 
 

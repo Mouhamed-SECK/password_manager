@@ -71,6 +71,22 @@ window.onload = () => {
                 groupKey = decryptData(password, groupKey);
 
                 console.log("decripted group key", groupKey)
+
+                const tempKey = generateSceureKey();
+
+                newEncryptedKey = encryptData(groupKey, tempKey)
+
+                data = {
+                    newEncryptedKey, 
+                    tempKey,
+                    email,
+                    groupId
+
+                }
+                result = await  axios.post(url + '/assignGroupAdmin', data) 
+                window.location.reload()  ;       
+
+                
                
             }
                   
