@@ -1,15 +1,31 @@
 let state = false;
 let password = document.getElementById("password");
+let passwordConfirm = document.getElementById("password-confirm");
 let passwordStrength = document.getElementById("password-strength");
 let lowUpperCase = document.querySelector(".low-upper-case i");
 let number = document.querySelector(".one-number i");
 let specialChar = document.querySelector(".one-special-char i");
 let eightChar = document.querySelector(".eight-character i");
+let passwordError = document.querySelector(".message");
 
 password.addEventListener("keyup", function(){
     let pass = document.getElementById("password").value;
     checkStrength(pass);
 });
+
+
+const onKeyup = () => {
+    console.log(password.value , passwordConfirm.value)
+    if(password.value != passwordConfirm.value) {
+        
+        passwordError.innerHTML = "les mot de pass doivent etre identique" ;
+    }  else {
+        passwordError.innerHTML = "" ;
+    }
+
+}
+
+passwordConfirm.addEventListener("keyup",onKeyup);
 
 function toggle(){
     if(state){

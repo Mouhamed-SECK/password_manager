@@ -27,11 +27,6 @@ class Groupe
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'groupes')]
     private $groupAdmin;
 
-
-
-
-
-
     public function getId(): ?int
     {
         return $this->id;
