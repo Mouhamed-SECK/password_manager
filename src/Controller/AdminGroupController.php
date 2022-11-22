@@ -68,6 +68,7 @@ class AdminGroupController extends AbstractController
     #[Route('/admin/groups', name: 'admin.group.index')]
     public function index(Request $request, EntityManagerInterface $manager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
        
         $allGroups = $this->repository->findAll();
 
@@ -90,9 +91,10 @@ class AdminGroupController extends AbstractController
     #[Route('/admin/groups/verify', name: 'admin.group.verify')]
     public function verify(Request $request, EntityManagerInterface $manager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-
 
         $data = $request->getContent();
         $data = json_decode($data, true);
@@ -108,6 +110,7 @@ class AdminGroupController extends AbstractController
     #[Route('/admin/groups/getGroupKey', name: 'admin.group.key')]
     public function getGroupKey(Request $request, EntityManagerInterface $manager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $data = $request->getContent();
         $data = json_decode($data, true);
@@ -120,9 +123,9 @@ class AdminGroupController extends AbstractController
     #[Route('/admin/groups/save', name: 'admin.group.save')]
     public function save(Request $request, EntityManagerInterface $manager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        
 
         $groupe = new Groupe();
 
@@ -143,8 +146,8 @@ class AdminGroupController extends AbstractController
     public function assignGroupAdmin(Request $request, EntityManagerInterface $manager,  SendEmailService $mail): Response
     {
 
-    
-
+        
+        $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
         $data = $request->getContent();
         $data = json_decode($data, true);
 
