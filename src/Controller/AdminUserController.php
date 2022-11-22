@@ -241,22 +241,12 @@ class AdminUserController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
-
-
-    #[Route('/admin/user/serachUser', name: 'admin.user.search')]
-    public function searchUser(Request $request, EntityManagerInterface $manager, UserRepository $usersRepository): Response
+    #[Route('/users/change-temporary-password', name: 'reset_temporary_password')]
+    public function home(): Response
     {
-        $data = $request->getContent();
-        $data = json_decode($data, true);
-
-    
-        $user = $usersRepository->findOneBy(['firstname' => $data['email']]);
-        return $this->json(['code' => 200, 'user' => $user], 200); 
+        return $this->render('/security/reset_temporary_password.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
     }
-
-
-
-
-
 
 }
