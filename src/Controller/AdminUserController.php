@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Role;
 
 use App\Form\UserRegistrationType;
 use App\Form\ResetPasswordFormType;
@@ -249,4 +248,5 @@ class AdminUserController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
 }

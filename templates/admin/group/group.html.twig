@@ -24,7 +24,7 @@
                                         <tr>
                                             <th>Groupe Id</th>
                                             <th>Titre</th>
-                                            <th>Desciption</th> 
+                                            <th>Administration</th> 
                                             <th>Date de création</th>  
                                             <th>Actions</th>  
                                         </tr>
@@ -42,8 +42,13 @@
                                             <td>
                                                  {{groupe.title}}
                                            </td>
-                                           <td>
-                                             ceci est une decription
+                                         <td>
+                                                <div class="avatar-list avatar-list-stacked px-3">
+                                                    <img class="avatar rounded-circle sm" src="/assets/images/xs/avatar2.jpg" alt="">
+                                                    <img class="avatar rounded-circle sm" src="/assets/images/xs/avatar1.jpg" alt="">
+                                                    <img class="avatar rounded-circle sm" src="/assets/images/xs/avatar3.jpg" alt="">
+                                                    <span class="avatar rounded-circle text-center pointer addAmdinBtn sm" data-id="{{groupe.id}}"  data-bs-toggle="modal" data-bs-target="#addUser"><i class="icofont-ui-add"></i></span>
+                                                </div>
                                            </td>
                                            <td>
                                                 12/03/2021
@@ -66,6 +71,88 @@
                 </div><!-- Row End -->
             </div>
         </div>
+
+
+            <div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="addUserLabel">Nommer un Admin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="inviteby_email">
+
+                    <form method="post" >
+
+                        <input type="hidden" value="{{app.user.privateKey}}"  id="groupKey"/> 
+                         <div class="input-group mb-3">
+                            <input type="password" class="form-control" placeholder="Entrez votre mot de pass" id="managePasswordInput" aria-describedby="exampleInputEmail1">
+                         
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Saisir son address email" id="adminEmail" aria-describedby="exampleInputEmail1">
+                            <button class="btn btn-dark" type="button" id="saveAdmin">Nommer</button>
+                        </div>
+                    </form>
+
+                    </div>
+                    <div class="members_list">
+                        <h6 class="fw-bold ">Admin disponible </h6>
+                        <ul class="list-unstyled list-group list-group-custom list-group-flush mb-0">
+                       
+                          {% for admin in admins %}
+                            <li class="list-group-item py-3 text-center text-md-start">
+                                <div class="d-flex align-items-center flex-column flex-sm-column flex-md-column flex-lg-row">
+                                    <div class="no-thumbnail mb-2 mb-md-0">
+                                        <img class="avatar lg rounded-circle" src="/assets/images/xs/avatar1.jpg" alt="">
+                                    </div>
+                                    <div class="flex-fill ms-3 text-truncate">
+                                   
+                                        <h6 class="mb-0  fw-bold"> {{admin.firstName}} {{admin.LastName}} </h6>
+                                        <span class="text-muted">{{admin.email}}</span>
+                                    </div>
+                                    <div class="members-action">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn bg-transparent dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Members
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                              <li>
+                                                  <a class="dropdown-item" href="#">
+                                                    <i class="icofont-check-circled"></i>
+                                                      
+                                                    <span>All operations permission</span>
+                                                   </a>
+                                                   
+                                                </li>
+                                                <li>
+                                                     <a class="dropdown-item" href="#">
+                                                        <i class="fs-6 p-2 me-1"></i>
+                                                           <span>Only Invite & manage team</span>
+                                                       </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn bg-transparent dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="icofont-ui-settings  fs-6"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                              <li><a class="dropdown-item" href="#"><i class="icofont-delete-alt fs-6 me-2"></i>Delete Member</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                          {% endfor %}  
+                        
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>""
 
 
                <!-- Add Expence-->
@@ -95,6 +182,8 @@
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>    
 
     <script src="/js/crypting.js"></script>
+    <script src="/js/create_groupe.js"></script>
+
 
 
 {% endblock %}
