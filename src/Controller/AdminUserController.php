@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Role;
 
 use App\Form\UserRegistrationType;
 use App\Form\ResetPasswordFormType;
@@ -241,4 +240,23 @@ class AdminUserController extends AbstractController
         $this->addFlash('danger', 'Jeton invalide');
         return $this->redirectToRoute('app_login');
     }
+
+
+
+    #[Route('/admin/user/serachUser', name: 'admin.user.search')]
+    public function searchUser(Request $request, EntityManagerInterface $manager, UserRepository $usersRepository): Response
+    {
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+    
+        $user = $usersRepository->findOneBy(['firstname' => $data['email']]);
+        return $this->json(['code' => 200, 'user' => $user], 200); 
+    }
+
+
+
+
+
+
 }

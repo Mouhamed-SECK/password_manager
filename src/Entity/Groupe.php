@@ -19,16 +19,14 @@ class Groupe
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(length: 255)]
     private ?string $privateKey = null;
 
     #[ORM\OneToMany(mappedBy: 'Groupe', targetEntity: User::class)]
     private Collection $users;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'groupes')]
+    #[ORM\OneToOne(mappedBy: 'managedGroup', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $groupAdmin;
-
-
-
 
 
 
@@ -96,13 +94,23 @@ class Groupe
     }
 
 
-    public function getPrivateKey(): ?User
+    public function getPrivateKey(): ?string
     {
         return $this->privateKey;
     }
 
     public function setGroupAdmin(?User $groupAdmin): self
     {
+        // unset the owning side of the relation if necessary
+        if ($groupAdmin === null && $this->groupAdmin !== null) {
+            $this->groupAdmin->setManagedGroup(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($groupAdmin !== null && $groupAdmin->getManagedGroup() !== $this) {
+            $groupAdmin->setManagedGroup($this);
+        }
+
         $this->groupAdmin = $groupAdmin;
 
         return $this;

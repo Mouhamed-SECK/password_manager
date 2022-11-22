@@ -48,9 +48,6 @@ class User implements UserInterface, TwoFactorInterface
     #[ORM\Column]
     private array $roles = [];
 
-    #[ORM\OneToMany(mappedBy: 'groupAdmin', targetEntity: Groupe::class)]
-    private $groupes;
-
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
@@ -59,6 +56,9 @@ class User implements UserInterface, TwoFactorInterface
 
     #[ORM\Column(type: 'string', length: 255)]
     private $privateKey =  "temporary";
+
+    #[ORM\OneToOne(inversedBy: 'groupAdmin', targetEntity: Groupe::class, cascade: ['persist', 'remove'])]
+    private $managedGroup;
 
     public function __construct()
     {
@@ -226,9 +226,10 @@ class User implements UserInterface, TwoFactorInterface
 
     public function getEmailAuthCode(): string
     {
+        /*
         if (null === $this->authCode) {
             throw new \LogicException('The email authentication code was not set');
-        }
+        } */
 
         return $this->authCode;
     }
@@ -246,27 +247,6 @@ class User implements UserInterface, TwoFactorInterface
         return $this->groupes;
     }
 
-    public function addGroupe(Groupe $groupe): self
-    {
-        if (!$this->groupes->contains($groupe)) {
-            $this->groupes[] = $groupe;
-            $groupe->setGroupAdmin($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGroupe(Groupe $groupe): self
-    {
-        if ($this->groupes->removeElement($groupe)) {
-            // set the owning side to null (unless already changed)
-            if ($groupe->getGroupAdmin() === $this) {
-                $groupe->setGroupAdmin(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function isIsVerified(): ?bool
     {
@@ -292,7 +272,7 @@ class User implements UserInterface, TwoFactorInterface
         return $this;
     }
 
-    public function getPrivateKey(): ?string
+    public function getPrivateKey(): string
     {
         return $this->privateKey;
     }
@@ -303,5 +283,19 @@ class User implements UserInterface, TwoFactorInterface
 
         return $this;
     }
+
+    public function getManagedGroup(): ?Groupe
+    {
+        return $this->managedGroup;
+    }
+
+    public function setManagedGroup(?Groupe $managedGroup): self
+    {
+        $this->managedGroup = $managedGroup;
+
+        return $this;
+    }
+
+
 
 }

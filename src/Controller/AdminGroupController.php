@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Groupe;
+use App\Entity\User;
+
 use App\Form\GroupType;
 use App\Repository\GroupeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,11 +35,30 @@ class AdminGroupController extends AbstractController
         
     }
 
+
+    private  function getAvailableGroupAdmin($users) {
+
+        $admins = [];
+        foreach ($users as $user) {
+
+            if($user->getManagedGroup()== null && in_array("ROLE_ADMIN", $user->getRoles())){
+                $admins[] = $user;
+            }
+           
+        }
+        return $admins;
+
+    }
+
+
     #[Route('/admin/groups', name: 'admin.group.index')]
     public function index(Request $request, EntityManagerInterface $manager): Response
     {
        
         $allGroups = $this->repository->findAll();
+
+        $users =    $this->manager->getRepository(User::class)->findAll();
+
 
         $groupe = new Groupe();
 
@@ -47,6 +68,7 @@ class AdminGroupController extends AbstractController
             'controller_name' => 'AdminGroupController',
             'form' => $form->createView(),
             'groups' => $allGroups,
+            'admins' => $this->getAvailableGroupAdmin($users)
         ]);
     }
 
@@ -69,6 +91,18 @@ class AdminGroupController extends AbstractController
     }
 
 
+    #[Route('/admin/groups/getGroupKey', name: 'admin.group.key')]
+    public function getGroupKey(Request $request, EntityManagerInterface $manager): Response
+    {
+
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+        return $this->json(['code' => 200, 'key' => $this->repository->find($data['groupId'])->getPrivateKey()], 200);
+    }
+
+
+
     #[Route('/admin/groups/save', name: 'admin.group.save')]
     public function save(Request $request, EntityManagerInterface $manager): Response
     {
@@ -82,7 +116,6 @@ class AdminGroupController extends AbstractController
 
         $groupe->setPrivateKey($data['groupKey']);
         $groupe->setTitle($data['title']);
-        $groupe->setGroupAdmin($user);
 
         $manager->persist($groupe);
         $manager->flush();
