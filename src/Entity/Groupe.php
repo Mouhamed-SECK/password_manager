@@ -28,6 +28,9 @@ class Groupe
     #[ORM\OneToOne(mappedBy: 'managedGroup', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $groupAdmin;
 
+    #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: Password::class)]
+    private $passwords;
+
 
 
     public function getId(): ?int
@@ -50,6 +53,7 @@ class Groupe
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->passwords = new ArrayCollection();
     }
 
     public function __toString() {
@@ -117,6 +121,36 @@ class Groupe
         }
 
         $this->groupAdmin = $groupAdmin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Password>
+     */
+    public function getPasswords(): Collection
+    {
+        return $this->passwords;
+    }
+
+    public function addPassword(Password $password): self
+    {
+        if (!$this->passwords->contains($password)) {
+            $this->passwords[] = $password;
+            $password->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removePassword(Password $password): self
+    {
+        if ($this->passwords->removeElement($password)) {
+            // set the owning side to null (unless already changed)
+            if ($password->getGroupe() === $this) {
+                $password->setGroupe(null);
+            }
+        }
 
         return $this;
     }
