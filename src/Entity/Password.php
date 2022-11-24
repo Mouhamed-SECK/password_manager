@@ -29,6 +29,9 @@ class Password
     #[ORM\JoinColumn(nullable: false)]
     private $groupe;
 
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $createdAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class Password
     public function setGroupe(?Groupe $groupe): self
     {
         $this->groupe = $groupe;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

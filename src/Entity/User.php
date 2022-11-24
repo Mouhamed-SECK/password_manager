@@ -38,7 +38,7 @@ class User implements UserInterface, TwoFactorInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $resetToken;
 
     #[ORM\ManyToOne(inversedBy: 'users')]

@@ -133,7 +133,7 @@ class AdminUserController extends AbstractController
                     $user->getEmail(),
                     'Votre mot de Pass temporaire',
                     'temp_password',
-                    $data['email']
+                    compact('user', 'temporaryPassword')
                 );
                 $this->addFlash('success', 'Utilisateur activé');
                 return $this->redirectToRoute('home');
