@@ -1,88 +1,71 @@
-'use strict';
-const passwordEl = document.getElementById('password'),
-  lengthEl = document.getElementById('length'),
-  uppercaseEl = document.getElementById('uppercase'),
-  lowercaseEl = document.getElementById('lowercase'),
-  numbersEl = document.getElementById('numbers'),
-  symbolsEl = document.getElementById('symbols'),
-  generateEl = document.getElementById('generate')
-;
-
-const randomFunc = {
-  lower: getRandomLower,
-  upper: getRandomUpper,
-  number: getRandomNumber,
-  symbol: getRandomSymbol,
-};
-
-/*
-  clipboardEl = document.getElementById('clipboard')
-clipboardEl.addEventListener('click', () => {
-  const textarea = document.createElement('textarea'),
-    password = passwordEl.innerText;
-
-  if (!password) return;
-
-  textarea.value = password;
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  textarea.remove();
-}); */
-
-generateEl.addEventListener('click', () => {
-
-  const length = +lengthEl.value,
-    hasLower = lowercaseEl.checked,
-    hasUpper = uppercaseEl.checked,
-    hasNumber = numbersEl.checked,
-    hasSymbol = symbolsEl.checked;
+window.onload = () => {
+    const url = window.location.href;
+    const PasswordForm = document.querySelector("#passwordForm");
+    const AdminPasswordFormBtn = document.querySelector("#createPassord");
 
 
-  passwordEl.value = generatePassword(
-    hasLower,
-    hasUpper,
-    hasNumber,
-    hasSymbol,
-    length
-  );
-});
+    const incorrectPassword = document.querySelector('#incorrectPassword');
 
-function generatePassword(lower, upper, number, symbol, length) {
-  let generatedPassword = '';
-  const typesCount = lower + upper + number + symbol,
-    typesArr = [{ lower }, { upper }, { number }, { symbol }].filter(
-      (item) => Object.values(item)[0]
-    );
-  if (typesCount === 0) {
-    return '';
-  }
+    const createPassordBtn = document.querySelector('#createPassord');
 
-  for (let i = 0; i < length; i += typesCount) {
-    typesArr.forEach((type) => {
-      const funcName = Object.keys(type)[0];
-      generatedPassword += randomFunc[funcName]();
-    });
-  }
+    AdminPasswordFormBtn.addEventListener("click", (e) => {
+      e.preventDefault();
 
-  const finalPassword = generatedPassword.slice(0, length);
+      PasswordForm.submit();
+    })
 
-  return finalPassword;
-}
+    
 
-function getRandomLower() {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-}
+   
+    PasswordForm.addEventListener("submit",                                                                                    appapp);
 
-function getRandomUpper() {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-}
 
-function getRandomNumber() {
-  return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
-}
 
-function getRandomSymbol() {
-  const symbols = '!@#$%*&(){}[]=<>/,.';
-  return symbols[Math.floor(Math.random() * symbols.length)];
+    async function onSubmit(event) {
+        event.preventDefault();
+     
+
+        const title = PasswordForm.elements['title'].value;
+        const url = PasswordForm.elements['url'].value;
+        const login = PasswordForm.elements['login'].value;
+        const email = PasswordForm.elements['email'].value;
+        const password = PasswordForm.elements['password'].value;
+        const description = PasswordForm.elements['description'].value;
+
+
+
+
+
+     
+    /*    try {
+            const result = await axios.post(url + '/verify', {password});
+         
+            if (result.data.isCorrectPassword) {
+                groupKey = encryptData(password, generateSceureKey());
+
+            console.log(groupKey);
+
+                data = {
+                    groupKey,
+                    title
+                }
+
+                console.log(data)
+                await saveGoupe(url + '/save', data); 
+                window.location.reload()  ;       
+            }
+
+          
+          
+        } catch (error) {
+            if (error.response.status === 403) {
+                window.location = '/login'
+            }
+        }
+           */
+    }
+
+ 
+
+   
 }
