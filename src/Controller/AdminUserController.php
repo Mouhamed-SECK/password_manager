@@ -40,6 +40,7 @@ class AdminUserController extends AbstractController
     #[Route('/admin/users', name: 'admin.users.index')]
     public function index(): Response
     {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
@@ -56,6 +57,7 @@ class AdminUserController extends AbstractController
     #[Route('/admin/users/new', name: 'admin.users.new')]
     public function new(Request $request, EntityManagerInterface $manager, SendEmailService $mail, JWTService $jwt): Response
     {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
@@ -153,10 +155,11 @@ class AdminUserController extends AbstractController
         SendEmailService $mail
     ): Response
     {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
-        
+
         $form = $this->createForm(ResetPasswordRequestFormType::class);
 
         $form->handleRequest($request);
