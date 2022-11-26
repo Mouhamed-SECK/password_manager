@@ -22,7 +22,6 @@ const onKeyup = () => {
     }  else {
         passwordError.innerHTML = "" ;
     }
-
 }
 
 passwordConfirm.addEventListener("keyup",onKeyup);

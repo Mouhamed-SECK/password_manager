@@ -29,8 +29,7 @@ class AdminGroupController extends AbstractController
         $this->repository = $repository;
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
-        
-        
+           
     }
 
     #[Route('/admin/groups', name: 'admin.group.index')]
@@ -63,8 +62,6 @@ class AdminGroupController extends AbstractController
 
         $isCorrectPassword = $this->passwordEncoder->isPasswordValid($user, $data['password']);
 
-
-
         return $this->json(['code' => 200, 'isCorrectPassword' => $isCorrectPassword], 200);
     }
 
@@ -89,12 +86,6 @@ class AdminGroupController extends AbstractController
 
         return $this->json(['code' => 200, 'success' => TRUE], 200);
     }
-
-
-
-
-
-
 }
 
 

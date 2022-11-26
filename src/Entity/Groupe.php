@@ -84,7 +84,6 @@ class Groupe
     }
 
  
-
     public function getGroupAdmin(): ?User
     {
         return $this->groupAdmin;

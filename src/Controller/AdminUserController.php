@@ -233,4 +233,5 @@ class AdminUserController extends AbstractController
         $this->addFlash('danger', 'Jeton invalide');
         return $this->redirectToRoute('app_login');
     }
+
 }
