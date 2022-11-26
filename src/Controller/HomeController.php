@@ -31,7 +31,6 @@ class HomeController extends AbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if(!$user->isIsTemporaryPasswordChange()){
-            //$this->forward('App\Controller\AdminUserController::forcePasswordChange');
             return $this->redirectToRoute('security.reset-temporary-password');
         }
 
