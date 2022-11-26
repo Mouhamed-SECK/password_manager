@@ -67,7 +67,9 @@ class AdminGroupController extends AbstractController
     #[Route('/admin/groups', name: 'admin.group.index')]
     public function index(Request $request, EntityManagerInterface $manager): Response
     {
+
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
        
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
@@ -95,6 +97,7 @@ class AdminGroupController extends AbstractController
     public function verify(Request $request, EntityManagerInterface $manager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
@@ -149,6 +152,7 @@ class AdminGroupController extends AbstractController
     #[Route('/admin/groups/assignGroupAdmin', name: 'admin.group.assignGroupAdmin')]
     public function assignGroupAdmin(Request $request, EntityManagerInterface $manager,  SendEmailService $mail): Response
     {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
