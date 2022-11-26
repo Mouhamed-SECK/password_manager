@@ -32,7 +32,6 @@ class Groupe
     private $passwords;
 
 
-
     public function getId(): ?int
     {
         return $this->id;
@@ -91,7 +90,6 @@ class Groupe
     }
 
  
-
     public function getGroupAdmin(): ?User
     {
         return $this->groupAdmin;

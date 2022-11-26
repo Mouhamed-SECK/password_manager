@@ -28,7 +28,7 @@
     <div id="mytask-layout" class="theme-indigo"> 
 
     <!-- sidebar -->
-    {% if app.user %}
+    {% if app.user and app.user.isTemporaryPasswordChange%}
     <div class="sidebar px-4 py-4 py-md-5 me-0">
         <div class="d-flex flex-column h-100">
             <a href="index.html" class="mb-0 brand-icon">
@@ -80,7 +80,8 @@
             <nav class="navbar py-4">
                 <div class="container-xxl">
 
-                 {% if app.user %}
+                 {% if app.user and app.user.isTemporaryPasswordChange %}
+                
                     <!-- header rightbar icon -->
                     <div class="h-right d-flex align-items-center mr-5 mr-lg-0 order-1">
                         <div class="d-flex">

@@ -34,17 +34,13 @@ class AdminUserController extends AbstractController
     public function __construct(UserRepository  $repository, EntityManagerInterface $manager, JWTService $jwt)
     {
         $this->repository = $repository;
-        $this->manager = $manager;
-        
-        
+        $this->manager = $manager; 
     }
 
     #[Route('/admin/users', name: 'admin.users.index')]
     public function index(): Response
     {
         $users = $this->repository->findAll();
-
-     
 
         return $this->render('admin/users/users.html.twig', [
             'controller_name' => 'AdminUserController',
@@ -58,8 +54,6 @@ class AdminUserController extends AbstractController
     {
 
         $user = new User();
-
-
 
         $form =  $this->createForm(UserRegistrationType::class, $user);  
         $form->handleRequest($request) ;
@@ -115,8 +109,6 @@ class AdminUserController extends AbstractController
 
             // On récupère le user du token
             $user = $usersRepository->find($payload['user_id']);
-
-          
 
             //On vérifie que l'utilisateur existe et n'a pas encore activé son compte
             if($user && !$user->isIsVerified()){
@@ -241,6 +233,7 @@ class AdminUserController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
+
     #[Route('/users/change-temporary-password', name: 'reset_temporary_password')]
     public function home(): Response
     {
@@ -248,5 +241,6 @@ class AdminUserController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
 
 }

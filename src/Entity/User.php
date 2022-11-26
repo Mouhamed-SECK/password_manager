@@ -52,6 +52,9 @@ class User implements UserInterface, TwoFactorInterface
     private $isVerified = false;
 
     #[ORM\Column(type: 'boolean')]
+    private $isTemporaryPasswordChange = false;
+
+    #[ORM\Column(type: 'boolean')]
     private $isKeyChange =false;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -265,14 +268,28 @@ class User implements UserInterface, TwoFactorInterface
         return $this->isKeyChange;
     }
 
-    public function setIsKeyChange(bool $isKeyChange): self
+    public function setIsKeyChange(bool $isTemporaryPasswordChange): self
     {
-        $this->isKeyChange = $isKeyChange;
+        $this->isTemporaryPasswordChange = $isTemporaryPasswordChange;
 
         return $this;
     }
 
-    public function getPrivateKey(): string
+
+    public function isIsTemporaryPasswordChange(): ?bool
+    {
+        return $this->isTemporaryPasswordChange;
+    }
+
+    public function setIsTemporaryPassword(bool $isTemporaryPasswordChange): self
+    {
+        $this->isTemporaryPasswordChange = $isTemporaryPasswordChange;
+
+        return $this;
+    }
+    
+    public function getPrivateKey(): ?string
+
     {
         return $this->privateKey;
     }

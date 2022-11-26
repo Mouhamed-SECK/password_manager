@@ -33,8 +33,7 @@ class AdminGroupController extends AbstractController
         $this->repository = $repository;
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
-        
-        
+           
     }
 
 
@@ -100,8 +99,6 @@ class AdminGroupController extends AbstractController
         $data = json_decode($data, true);
 
         $isCorrectPassword = $this->passwordEncoder->isPasswordValid($user, $data['password']);
-
-
 
         return $this->json(['code' => 200, 'isCorrectPassword' => $isCorrectPassword], 200);
     }
@@ -181,6 +178,7 @@ class AdminGroupController extends AbstractController
 
 
     
+
 
 
 
