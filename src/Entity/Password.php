@@ -19,7 +19,7 @@ class Password
     #[ORM\Column(type: 'string', length: 255)]
     private $url;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $image;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -29,8 +29,25 @@ class Password
     #[ORM\JoinColumn(nullable: false)]
     private $groupe;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime' )]
     private $createdAt;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $usedLogin;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $recuparationEmail;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $title;
+
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+  
+        
+    }
 
     public function getId(): ?int
     {
@@ -41,6 +58,8 @@ class Password
     {
         return $this->description;
     }
+
+    
 
     public function setDescription(string $description): self
     {
@@ -105,6 +124,42 @@ class Password
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUsedLogin(): ?string
+    {
+        return $this->usedLogin;
+    }
+
+    public function setUsedLogin(string $usedLogin): self
+    {
+        $this->usedLogin = $usedLogin;
+
+        return $this;
+    }
+
+    public function getRecuparationEmail(): ?string
+    {
+        return $this->recuparationEmail;
+    }
+
+    public function setRecuparationEmail(string $recuparationEmail): self
+    {
+        $this->recuparationEmail = $recuparationEmail;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
 
         return $this;
     }

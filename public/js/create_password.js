@@ -1,68 +1,79 @@
 window.onload = () => {
-    const url = window.location.href;
     const PasswordForm = document.querySelector("#passwordForm");
-    const AdminPasswordFormBtn = document.querySelector("#createPassord");
+    const AdminpasswordForm = document.querySelector("#AdminpasswordForm");
+    const adminData = document.querySelector("#adminData");
 
+    const url = window.location.origin;
+
+    let groupId = parseInt(adminData.value)
+        
 
     const incorrectPassword = document.querySelector('#incorrectPassword');
 
-    const createPassordBtn = document.querySelector('#createPassord');
 
-    AdminPasswordFormBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+    const adminPassordInput = document.querySelector('#adminPassword');
 
-      PasswordForm.submit();
-    })
 
     
 
-   
-    PasswordForm.addEventListener("submit",                                                                                    appapp);
+    AdminpasswordForm.addEventListener("submit", onSubmit)
 
 
+     async function onSubmit(event) {
 
-    async function onSubmit(event) {
-        event.preventDefault();
+
+      event.preventDefault();
+
+    
+      const password = adminPassordInput.value;
      
 
         const title = PasswordForm.elements['title'].value;
-        const url = PasswordForm.elements['url'].value;
+        const usedUrl = PasswordForm.elements['url'].value;
         const login = PasswordForm.elements['login'].value;
         const email = PasswordForm.elements['email'].value;
-        const password = PasswordForm.elements['password'].value;
+        const createdPassword = PasswordForm.elements['password'].value;
         const description = PasswordForm.elements['description'].value;
 
-
-
-
-
-     
-    /*    try {
-            const result = await axios.post(url + '/verify', {password});
-         
+        const data  = {
+          title,
+          usedUrl,
+          login,
+          email,
+          createdPassword, 
+          description
+        }
+      
+       try {
+            let  result = await axios.post(url + '/admin/groups/verify', {password});
+            console.log(groupId)
+        
             if (result.data.isCorrectPassword) {
-                groupKey = encryptData(password, generateSceureKey());
+               incorrectPassword.innerHTML = ""
 
-            console.log(groupKey);
+               result = await  axios.post(url + '/admin/groups/getGroupKey', {groupId}) 
+               let groupKey = result.data.key;
+               console.log("Encrypted group key with super admin password", groupKey)
+   
+               groupKey = decryptData(password, groupKey);
 
-                data = {
-                    groupKey,
-                    title
-                }
+               data.createdPassword = encryptData(groupKey, data.createdPassword)
 
-                console.log(data)
-                await saveGoupe(url + '/save', data); 
-                window.location.reload()  ;       
+               console.log(data)
+
+                result = await axios.post(url + '/admin/password/save', data);
+               
+            } else {
+              incorrectPassword.innerHTML = "Mot de pass incorect"
+
             }
 
-          
-          
         } catch (error) {
             if (error.response.status === 403) {
                 window.location = '/login'
             }
         }
-           */
+          
     }
 
  

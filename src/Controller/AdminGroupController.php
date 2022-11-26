@@ -91,7 +91,7 @@ class AdminGroupController extends AbstractController
     #[Route('/admin/groups/verify', name: 'admin.group.verify')]
     public function verify(Request $request, EntityManagerInterface $manager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+       // $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
 
         $user = $this->get('security.token_storage')->getToken()->getUser();

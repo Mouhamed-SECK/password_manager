@@ -114,18 +114,19 @@
                 </div>
          
                 <div class="modal-body">
-                    <form   id="adminPasswordForm">
+                    <form  method="post"  id="AdminpasswordForm">
                     
                         <div class="">
+                            <input id="adminData"  type="hidden" value={{app.user.managedGroup.id}}>  </input>
                             <label for='adminPassword'>Entrez votre mot de Pass</label>
                             <input class="form-control" type="password" id="adminPassword" />
-                            <span  id="incorrectPassword"> </span>
+                            <span  id="incorrectPassword" class="text-danger"> </span>
                         </div>
                         
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuler</button>
-                            <div  id="createPassord" class="btn btn-primary">Valider</div>
+                            <button type="submit"  id="createPassord" class="btn btn-primary">Valider</div>
                         </div>
                 </form>
         
@@ -133,8 +134,12 @@
             </div>
         </div>
 
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>    
 
-<script src="/js/generate_password.js"> </script>
-<script src="/js/create_password.js"> </script>
+    <script src="/js/crypting.js"> </script>
+
+
+    <script src="/js/generate_password.js"> </script>
+    <script src="/js/create_password.js"> </script>
 
 {% endblock %}
