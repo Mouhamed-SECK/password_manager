@@ -19,13 +19,18 @@ class Groupe
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(length: 255)]
     private ?string $privateKey = null;
 
     #[ORM\OneToMany(mappedBy: 'Groupe', targetEntity: User::class)]
     private Collection $users;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'groupes')]
+    #[ORM\OneToOne(mappedBy: 'managedGroup', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $groupAdmin;
+
+    #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: Password::class)]
+    private $passwords;
+
 
     public function getId(): ?int
     {
@@ -47,6 +52,7 @@ class Groupe
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->passwords = new ArrayCollection();
     }
 
     public function __toString() {
@@ -90,14 +96,59 @@ class Groupe
     }
 
 
-    public function getPrivateKey(): ?User
+    public function getPrivateKey(): ?string
     {
         return $this->privateKey;
     }
 
+    public function setPrivateKey($privateKey) 
+    {
+         $this->privateKey = $privateKey;
+    }
+
     public function setGroupAdmin(?User $groupAdmin): self
     {
+        // unset the owning side of the relation if necessary
+        if ($groupAdmin === null && $this->groupAdmin !== null) {
+            $this->groupAdmin->setManagedGroup(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($groupAdmin !== null && $groupAdmin->getManagedGroup() !== $this) {
+            $groupAdmin->setManagedGroup($this);
+        }
+
         $this->groupAdmin = $groupAdmin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Password>
+     */
+    public function getPasswords(): Collection
+    {
+        return $this->passwords;
+    }
+
+    public function addPassword(Password $password): self
+    {
+        if (!$this->passwords->contains($password)) {
+            $this->passwords[] = $password;
+            $password->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removePassword(Password $password): self
+    {
+        if ($this->passwords->removeElement($password)) {
+            // set the owning side to null (unless already changed)
+            if ($password->getGroupe() === $this) {
+                $password->setGroupe(null);
+            }
+        }
 
         return $this;
     }

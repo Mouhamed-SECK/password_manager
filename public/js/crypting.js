@@ -1,4 +1,4 @@
-const encryptData = (password, secret) => {
+ const encryptData = (password, secret) => {
     const salt = CryptoJS.lib.WordArray.random(16);
     const iv = CryptoJS.lib.WordArray.random(16);
     const key = CryptoJS.PBKDF2(password, salt, { keySize: 256/32, iterations: 10000, hasher: CryptoJS.algo.SHA256});
@@ -17,17 +17,7 @@ const encryptData = (password, secret) => {
     return concatenned.toString(CryptoJS.enc.Base64);
 
 }
-const saveGoupe = async (url, data) => {
-    console.log(url)
-    try {
-        const result = await axios.post(url, data);
-      
-    } catch (error) {
-        if (error.response.status === 403) {
-            window.location = '/login'
-        }
-    }
-}
+
 
 const decryptData = (password , secret) => {
 
@@ -65,43 +55,3 @@ const generateSceureKey =()  => CryptoJS.lib.WordArray.random(32).toString(Crypt
 
 
 
-window.onload = () => {
-  
-    const GroupForm = document.querySelector('[name="group"]');
-
-    GroupForm.addEventListener("submit", onSubmit);
-
-
-    async function onSubmit(event) {
-        event.preventDefault();
-        const url = window.location.href 
-
-        password = GroupForm.elements['group_privateKey'].value;
-        title = GroupForm.elements['group_title'].value;
-     
-        try {
-            const result = await axios.post(url + '/verify', {password});
-         
-            if (result.data.isCorrectPassword) {
-                groupKey = encryptData(password, generateSceureKey());
-
-                data = {
-                    groupKey,
-                    title
-                }
-
-                await saveGoupe(url + '/save', data); 
-                window.location.reload()  ;       
-            }
-
-          
-          
-        } catch (error) {
-            if (error.response.status === 403) {
-                window.location = '/login'
-            }
-        }
-    }
-
-   
-}
