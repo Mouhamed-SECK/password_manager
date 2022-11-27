@@ -14,8 +14,6 @@ window.onload = () => {
     const adminPassordInput = document.querySelector('#adminPassword');
 
 
-    
-
     AdminpasswordForm.addEventListener("submit", onSubmit)
 
 
@@ -64,7 +62,7 @@ window.onload = () => {
                 result = await axios.post(url + '/admin/password/save', data);
                
             } else {
-              incorrectPassword.innerHTML = "Mot de pass incorect"
+              incorrectPassword.innerHTML = "Mot de passe incorect"
 
             }
 

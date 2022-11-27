@@ -3,13 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Role;
-use App\Repository\GroupeRepository;
+use App\Repository\UserRepository;
 
 use App\Form\UserRegistrationType;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
-use App\Repository\UserRepository;
 use App\Service\SendEmailService;
 use App\Service\JWTService;
 use App\Service\PasswordGenerator;
@@ -31,7 +29,7 @@ class UserController extends AbstractController
     private $manager;
     private $passwordEncoder;
 
-    public function __construct(GroupeRepository $repository, EntityManagerInterface $manager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserRepository $repository, EntityManagerInterface $manager, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->repository = $repository;
         $this->manager = $manager;
@@ -60,11 +58,32 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/getPrivateKey', name: 'users.private-key')]
-    public function getPrivateKey(): Response
+    public function getPrivateKey(Request $request, EntityManagerInterface $manager): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        $data = $request->getContent();
+        $data = json_decode($data, true);
 
+        return $this->json(['code' => 200, 'key' => $this->repository->find($data['userId'])->getPrivateKey()], 200);
+    }
+
+    #[Route('/users/changeUserTempPassword', name: 'user.change-user-temp-password')]
+    public function changeUserTempPassword(Request $request, EntityManagerInterface $manager): Response
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+        $user->setIsTemporaryPassword(true);
+        $hash = $encoder->encodePassword($user,data['password']);
+        $user->setPassword($hash);
+        $user->setPrivateKey(data['userPrivatekey']);
+
+        $manager->flush();
+
+        return $this->json(['code' => 200, 'success' => TRUE], 200);
     }
 
 }

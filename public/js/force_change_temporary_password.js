@@ -5,7 +5,11 @@ window.onload = () => {
     let passwordTemp = document.getElementById("temp-password");
     let passwordError = document.querySelector(".message");
     let isSamePassword;
-    let userId = document.getElementById("user-id");
+    const tempPasswordIncorrect = document.querySelector('#temp-password-incorrect');
+
+    
+    const userData = document.querySelector("#user-id");
+    let userId = parseInt(userData.value);
 
     passwordConfirm.addEventListener("keyup",onKeyup);
   
@@ -29,25 +33,37 @@ window.onload = () => {
     async function onSubmit(event) {
         event.preventDefault();
         const url = window.location.origin; 
-     
+
+    
         try {
             if(isSamePassword) {
-                const result = await axios.post(url + '/users/verify', {password:passwordTemp.value});
-
+                let result = await axios.post(url + '/users/verify', {password:passwordTemp.value});
                 console.log(result);
-                console.log(userId.value);
+                console.log(userId);
 
                 if (result.data.isCorrectPassword) {
                     
-                    groupKey = encryptData(passwordTemp, generateSceureKey());
+                    tempPasswordIncorrect.innerHTML = ""
 
-                    data = {
-                        groupKey,
-                        title
+                    result = await  axios.post(url + '/users/getPrivateKey', {userId}) 
+                    let userPrivatekey = result.data.key;
+                    console.log("Encrypted user private key with temporary password", userPrivatekey)
+        
+                    userPrivatekey = decryptData(passwordTemp, userPrivatekey);
+                    console.log("It's OK")
+
+                    const data = {
+                        password,
+                        userPrivatekey,
+                        userId
                     }
-    
-                    await saveGoupe(url + '/save', data); 
-                    window.location.reload()  ;  
+                    console.log(data);
+                    data.userPrivatekey = encryptData(userPrivatekey, data.password);
+
+
+                    result = await axios.post(url + '/users/changeUserTempPassword', data);
+                }else{
+                    tempPasswordIncorrect.innerHTML = "Mot de passe temporaire incorrect";
                 }
             }
           
