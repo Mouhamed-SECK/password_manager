@@ -49,18 +49,18 @@ class HomeController extends AbstractController
     public function adminHome(): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        dd($user);
-
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
-        $users = $this->manager->getRepository(User::class)->findAll();
 
+
+        $users = $this->repository->findGroupUsers($user->getManagedGroup()->getId());
+
+    
 
         return $this->render('home/adminHome.html.twig', [
             'controller_name' => 'HomeController',
-            'users'  =>$users
+            'users'  =>  $users
         ]);
     }
 

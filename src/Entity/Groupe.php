@@ -23,7 +23,7 @@ class Groupe
     private ?string $privateKey = null;
 
     #[ORM\OneToMany(mappedBy: 'Groupe', targetEntity: User::class)]
-    private Collection $users;
+    private  $users;
 
     #[ORM\OneToOne(mappedBy: 'managedGroup', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $groupAdmin;
@@ -59,20 +59,19 @@ class Groupe
         return $this->getTitle();
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
+    
+    public function getUsers()
     {
         return $this->users;
     }
 
     public function addUser(User $user): self
     {
-        if (!$this->users->contains($user)) {
+     
+        
             $this->users->add($user);
             $user->setGroupe($this);
-        }
+    
 
         return $this;
     }

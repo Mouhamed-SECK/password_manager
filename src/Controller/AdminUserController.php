@@ -18,9 +18,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
@@ -54,9 +54,76 @@ class AdminUserController extends AbstractController
     }
 
 
+    
+
+
+    #[Route('/admin/users/createGroupUser', name: 'admin.users.createGroupUser')]
+    public function createGroupUser(Request $request, EntityManagerInterface $manager, UserRepository $usersRepository,SendEmailService $mail, JWTService $jwt): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $admin = $this->get('security.token_storage')->getToken()->getUser();
+        if(!$admin->isIsTemporaryPasswordChange()){
+            return $this->redirectToRoute('security.reset-temporary-password');
+        }
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+        $user = new User();
+
+        if ($usersRepository->findOneByEmail($data['email']) == null) { 
+            $user->setLogin($data['email']);
+
+            $user->setPrivateKey($data['privateKey']);
+            $user->setEmail($data['email']);
+            $user->setFirstname($data['firstname']);
+            $user->setLastname($data['lastname']);
+            $user->setGroupe($admin->getManagedGroup());
+            $user->setPassword($data['tempPassword']);
+            $user->setRoles(["ROLE_USER"]);
+
+            $admin->getManagedGroup()->addUser($user);
+
+            $manager->persist($user);
+            $manager->flush();
+
+            $header = [
+                'typ' => 'JWT',
+                'alg' => 'HS256'
+            ];
+
+            // On crée le Payload
+            $payload = [
+                'user_id' => $user->getId()
+            ];
+
+            // On génère le token
+            $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
+
+            $mail->send(
+                'no-reply@myPassword.fr',
+                $user->getEmail(),
+                'Activation de votre compte sur MYPassword',
+                'register',
+                compact('user', 'token')
+            );
+
+            return $this->json(['code' => 200 , 'success' => TRUE], 200);
+        } else {
+            return $this->json(['code' => 200 , 'success' => FALSE], 200);
+
+        }
+    }
+
+
+
+
+
     #[Route('/admin/users/new', name: 'admin.users.new')]
     public function new(Request $request, EntityManagerInterface $manager, SendEmailService $mail, JWTService $jwt): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
@@ -64,8 +131,11 @@ class AdminUserController extends AbstractController
 
         $user = new User();
 
+
         $form =  $this->createForm(UserRegistrationType::class, $user);  
         $form->handleRequest($request) ;
+
+
 
         if ($form->isSubmitted() && $form->isValid()) { 
             $user->setLogin($user->getEmail());
@@ -121,11 +191,18 @@ class AdminUserController extends AbstractController
 
             //On vérifie que l'utilisateur existe et n'a pas encore activé son compte
             if($user && !$user->isIsVerified()){
+                $temporaryPassword = "";
+                if ($user->getPassword()=="") {
+                    $temporaryPassword = $passwordGenerator->generate();
+                    $hash = $encoder->encodePassword($user,$temporaryPassword);
+                    $user->setPassword($hash);
 
-                $temporaryPassword = $passwordGenerator->generate();
-                $hash = $encoder->encodePassword($user,$temporaryPassword);
-                $user->setPassword($hash);
-    
+                } else {
+                    $temporaryPassword =$user->getPassword();
+                    $hash = $encoder->encodePassword($user,$user->getPassword());
+                    $user->setPassword($hash);
+                }
+
                 $user->setIsVerified(true);
                 $em->flush($user);
 
