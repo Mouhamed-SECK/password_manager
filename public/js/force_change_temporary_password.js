@@ -60,7 +60,6 @@ window.onload = () => {
                     console.log(data);
                     data.userPrivatekey = encryptData(userPrivatekey, data.password);
 
-
                     result = await axios.post(url + '/users/changeUserTempPassword', data);
                 }else{
                     tempPasswordIncorrect.innerHTML = "Mot de passe temporaire incorrect";

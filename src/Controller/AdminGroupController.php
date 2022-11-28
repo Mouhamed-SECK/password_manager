@@ -125,8 +125,6 @@ class AdminGroupController extends AbstractController
         return $this->json(['code' => 200, 'key' => $this->repository->find($data['groupId'])->getPrivateKey()], 200);
     }
 
-
-
     #[Route('/admin/groups/save', name: 'admin.group.save')]
     public function save(Request $request, EntityManagerInterface $manager): Response
     {
