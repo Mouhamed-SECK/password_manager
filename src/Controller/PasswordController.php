@@ -16,9 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 class PasswordController extends AbstractController
 {
     #[Route('/admin/password/create', name: 'admin.password.create')]
-    public function index(): Response
+    public function new(): Response
     {
-        return $this->render('password/index.html.twig', [
+        return $this->render('password/new.html.twig', [
             'controller_name' => 'PasswordController',
         ]);
     }
@@ -33,7 +33,6 @@ class PasswordController extends AbstractController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-
         $data = $request->getContent();
         $data = json_decode($data, true);
 
@@ -45,9 +44,7 @@ class PasswordController extends AbstractController
         $password->setUsedLogin($data['login']);
         $password->setGroupe($user->getManagedGroup());
 
-
-
-
+        $user->getManagedGroup()->addPassword($password);
 
         $manager->persist($password);
         $manager->flush();

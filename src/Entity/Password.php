@@ -116,7 +116,7 @@ class Password
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }

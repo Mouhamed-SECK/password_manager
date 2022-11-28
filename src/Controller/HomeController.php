@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\Entity\Password;
+use App\Entity\User;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,11 +35,35 @@ class HomeController extends AbstractController
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
+        $passwords = $this->manager->getRepository(Password::class)->findAll();
+    
 
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
+            'passwords'  =>  $passwords
         ]);
     }
+
+
+    #[Route('/admin/home', name: 'Adminhome')]
+    public function adminHome(): Response
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        dd($user);
+
+        if(!$user->isIsTemporaryPasswordChange()){
+            return $this->redirectToRoute('security.reset-temporary-password');
+        }
+        $users = $this->manager->getRepository(User::class)->findAll();
+
+
+        return $this->render('home/adminHome.html.twig', [
+            'controller_name' => 'HomeController',
+            'users'  =>$users
+        ]);
+    }
+
 
     #[Route('/', name: 'index')]
     public function index(): Response
@@ -52,5 +78,8 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+
+
 
 }
