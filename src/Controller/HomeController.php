@@ -74,6 +74,11 @@ class HomeController extends AbstractController
     #[Route('/reset-temporary-password', name: 'security.reset-temporary-password')]
     public function forcePasswordChange(Request $request, EntityManagerInterface $manager): Response
     {  
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        if($user->isIsTemporaryPasswordChange()){
+            return $this->redirectToRoute('home');
+        }
+
         return $this->render('security/reset_temporary_password.html.twig', [
             'controller_name' => 'HomeController',
         ]);
