@@ -69,7 +69,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/changeUserTempPassword', name: 'user.change-user-temp-password')]
-    public function changeUserTempPassword(Request $request, EntityManagerInterface $manager): Response
+    public function changeUserTempPassword(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -77,9 +77,9 @@ class UserController extends AbstractController
         $data = json_decode($data, true);
 
         $user->setIsTemporaryPassword(true);
-        $hash = $encoder->encodePassword($user,data['password']);
+        $hash = $encoder->encodePassword($user,$data['password']);
         $user->setPassword($hash);
-        $user->setPrivateKey(data['userPrivatekey']);
+        $user->setPrivateKey($data['userPrivatekey']);
 
         $manager->flush();
 

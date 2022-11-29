@@ -199,7 +199,7 @@ class AdminUserController extends AbstractController
 
                 } else {
                     $temporaryPassword =$user->getPassword();
-                    $hash = $encoder->encodePassword($user,$user->getPassword());
+                    $hash = $encoder->encodePassword($user,$temporaryPassword);
                     $user->setPassword($hash);
                 }
 
