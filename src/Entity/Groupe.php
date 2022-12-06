@@ -101,12 +101,6 @@ class Groupe
     }
 
 
-    public function setPrivateKey(string $privateKey)
-    {
-        $this->privateKey = $privateKey;
-    }
-
-
 
     public function setPrivateKey($privateKey) 
     {
