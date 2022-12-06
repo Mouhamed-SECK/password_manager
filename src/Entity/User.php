@@ -32,13 +32,13 @@ class User implements UserInterface, TwoFactorInterface
     #[ORM\Column(length: 255)]
     private ?string $login = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $password = "temporary";
+    #[ORM\Column(length: 255,  nullable: true)]
+    private ?string $password;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $resetToken;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
@@ -52,10 +52,13 @@ class User implements UserInterface, TwoFactorInterface
     private $isVerified = false;
 
     #[ORM\Column(type: 'boolean')]
+    private $isTemporaryPasswordChange = false;
+
+    #[ORM\Column(type: 'boolean')]
     private $isKeyChange =false;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $privateKey =  "temporary";
+    #[ORM\Column(type: 'string', length: 255, nullable : true)]
+    private $privateKey;
 
     #[ORM\OneToOne(inversedBy: 'groupAdmin', targetEntity: Groupe::class, cascade: ['persist', 'remove'])]
     private $managedGroup;
@@ -265,14 +268,28 @@ class User implements UserInterface, TwoFactorInterface
         return $this->isKeyChange;
     }
 
-    public function setIsKeyChange(bool $isKeyChange): self
+    public function setIsKeyChange(bool $isTemporaryPasswordChange): self
     {
-        $this->isKeyChange = $isKeyChange;
+        $this->isTemporaryPasswordChange = $isTemporaryPasswordChange;
 
         return $this;
     }
 
-    public function getPrivateKey(): string
+
+    public function isIsTemporaryPasswordChange(): ?bool
+    {
+        return $this->isTemporaryPasswordChange;
+    }
+
+    public function setIsTemporaryPassword(bool $isTemporaryPasswordChange): self
+    {
+        $this->isTemporaryPasswordChange = $isTemporaryPasswordChange;
+
+        return $this;
+    }
+    
+    public function getPrivateKey(): ?string
+
     {
         return $this->privateKey;
     }

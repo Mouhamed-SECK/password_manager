@@ -110,8 +110,8 @@
                         <input type="hidden" value="{{app.user.privateKey}}"  id="groupKey"/> 
                          <div class="input-group mb-3">
                             <input type="password" class="form-control" placeholder="Entrez votre mot de pass" id="managePasswordInput" aria-describedby="exampleInputEmail1">
-                         
                         </div>
+                        <span id="incorrectPassword"  class="text-danger text-small"> </span>
                         <div class="input-group mb-3">
                             <input type="email" class="form-control" placeholder="Saisir son address email" id="adminEmail" aria-describedby="exampleInputEmail1">
                             <button class="btn btn-dark" type="button" id="saveAdmin">Nommer</button>
@@ -174,10 +174,10 @@
                 </div>
             </div>
             </div>
-        </div>""
+        </div>
 
 
-               <!-- Add Expence-->
+        
         <div class="modal fade" id="expadd" tabindex="-1"  aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
             <div class="modal-content">

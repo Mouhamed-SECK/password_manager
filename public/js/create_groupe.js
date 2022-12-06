@@ -15,9 +15,13 @@ window.onload = () => {
     const url = window.location.href;
     const GroupForm = document.querySelector('[name="group"]');
 
+    const incorrectPassword = document.querySelector('#incorrectPassword');
     const designeAdminButton = document.querySelector('#saveAdmin');
 
+
     const paginationBUtton = document.querySelectorAll(".page-item");
+
+    
 
     let addAmdinBtns;
     let groupId;
@@ -63,7 +67,7 @@ window.onload = () => {
     
             if (result.data.isCorrectPassword) {
             
-                
+                incorrectPassword.innerText = ""
                 result = await  axios.post(url + '/getGroupKey', {groupId}) 
                 groupKey = result.data.key;
                 console.log("Encrypted group key with super admin password", groupKey)
@@ -71,7 +75,25 @@ window.onload = () => {
                 groupKey = decryptData(password, groupKey);
 
                 console.log("decripted group key", groupKey)
+
+                const tempKey = generateSceureKey();
+
+                newEncryptedKey = encryptData(groupKey, tempKey)
+
+                data = {
+                    newEncryptedKey, 
+                    tempKey,
+                    email,
+                    groupId
+
+                }
+                result = await  axios.post(url + '/assignGroupAdmin', data) 
+                window.location.reload()  ;       
+
+                
                
+            } else {
+                incorrectPassword.innerText = "Votre mot de pass est incorrect"
             }
                   
         } catch (error) {

@@ -1,7 +1,112 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Hello PasswordController!{% endblock %}
+
 
 {% block body %}
+
+
+
+   <div class="body d-flex py-lg-3 py-md-2">
+            <div class="container-xxl">
+                <div class="row align-items-center">
+                <h4 class="text-left"  >
+                    MOT DE PASS
+                </h4>
+                </div> <!-- Row end  -->
+                <div class="row align-items-center">
+                    <div class="col-lg-12 col-md-12 flex-column">
+                        <div class="tab-content mt-4">
+                            <div class="tab-pane fade show active" id="All-list">
+                                <div class="row g-3 gy-5 py-3 row-deck">
+
+                                     {% for password in passwords %}
+
+                                        <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-center justify-content-between mt-5">
+                                                        <div class="lesson_name">
+                                                            <div class="project-block light-info-bg">
+                                                            <img  src="https://ui-avatars.com/api/?name={{password.title}}&background=random&color=ffffff"/>
+                                                             
+                                                            </div>
+                                                            <span class="small text-muted project_name fw-bold"> {{password.createdAt |format_datetime('short', 'none', locale='fr') }}</span>
+                                                            <h6 class="mb-0 fw-bold  fs-6  mb-2">{{password.title | capitalize}}</h6>
+                                                        </div>
+                                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editproject"><i class="icofont-edit text-success"></i></button>
+                                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteproject"><i class="icofont-ui-delete text-danger"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                    </div>
+                                                    <div class="row g-2 pt-4">
+                                                        <div class="col-12">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="icofont-paper-clip"></i>
+                                                                <span class="ms-2"> <a href="{{password.url}} ">  {{password.url}} </a> </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="icofont-sand-clock"></i>
+                                                                <span class="ms-2">{{password.recuparationEmail}}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="icofont-group-students "></i>
+                                                                <span class="ms-2">{{password.usedLogin}}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <input type="hidden"  class="privateKey" value="{{app.user.privateKey}}" />
+                                                        <input type="hidden" class="encryptedPassword" value="{{password.encryptedPassword}} "/>
+                                                    </div>
+                                                        
+
+                                                    <div class="dividers-block"></div>
+                                                        <p  class="text-small text-bold"> Description </p>
+                                                        <p  class="text-small"> {{password.description}}  </p>
+
+                                                    <div class="dividers-block"></div>
+
+                                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                                        <h4 class="small fw-bold mb-0">Niveau se securité</h4>
+                                                        <button class="small btn  btn-primary text-white p-1 "><i class="icofont-eye-alt"></i> Voir Mot de pass</button>
+                                                    </div>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        <div class="progress-bar bg-secondary ms-1" role="progressbar" style="width: 25%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        <div class="progress-bar bg-secondary ms-1" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                     {% endfor %}
+    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+ <div class="modal fade" id="showpassword" tabindex="-1"  aria-hidden="true">
+
+  
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>    
+
+    <script src="/js/crypting.js"> </script>
+    <script src="/js/get_password.js"> </script>
+
+
 
 {% endblock %}
