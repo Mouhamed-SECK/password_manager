@@ -80,10 +80,15 @@ class UserController extends AbstractController
         $hash = $encoder->encodePassword($user,$data['password']);
         $user->setPassword($hash);
         $user->setPrivateKey($data['userPrivatekey']);
+        $user->getManagedGroup()->setPrivateKey($data['userPrivatekey']);
 
-        $manager->flush();
+
+        $manager->flush($user);
 
         return $this->json(['code' => 200, 'success' => TRUE], 200);
     }
+
+
+    
 
 }

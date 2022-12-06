@@ -194,25 +194,25 @@ class AdminUserController extends AbstractController
                 $temporaryPassword = "";
                 if ($user->getPassword()=="") {
                     $temporaryPassword = $passwordGenerator->generate();
-                    $hash = $encoder->encodePassword($user,$temporaryPassword);
-                    $user->setPassword($hash);
 
                 } else {
                     $temporaryPassword =$user->getPassword();
                     $hash = $encoder->encodePassword($user,$temporaryPassword);
                     $user->setPassword($hash);
+
+                    $mail->send(
+                        'no-reply@myPassword.fr',
+                        $user->getEmail(),
+                        'Votre mot de Pass temporaire',
+                        'temp_password',
+                        compact('user', 'temporaryPassword')
+                    );
                 }
 
                 $user->setIsVerified(true);
                 $em->flush($user);
 
-                $mail->send(
-                    'no-reply@myPassword.fr',
-                    $user->getEmail(),
-                    'Votre mot de Pass temporaire',
-                    'temp_password',
-                    compact('user', 'temporaryPassword')
-                );
+              
                 $this->addFlash('success', 'Utilisateur activé');
                 return $this->redirectToRoute('home');
             }

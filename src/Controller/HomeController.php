@@ -68,7 +68,22 @@ class HomeController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(): Response
     {
-        return $this->redirectToRoute('home');
+        if (   $user = $this->get('security.token_storage')->getToken() == null) {
+            return $this->redirectToRoute('home');
+        }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+    
+        if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            return $this->redirectToRoute('admin.group.index');
+
+        } else if  ((in_array('ROLE_ADMIN', $user->getRoles()))) {
+            
+            return $this->redirectToRoute('Adminhome');
+    
+        } else {
+            return $this->redirectToRoute('home');
+
+        }
     }
 
     #[Route('/reset-temporary-password', name: 'security.reset-temporary-password')]
@@ -76,6 +91,7 @@ class HomeController extends AbstractController
     {  
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if($user->isIsTemporaryPasswordChange()){
+          
             return $this->redirectToRoute('home');
         }
 

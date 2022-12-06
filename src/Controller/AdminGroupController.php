@@ -148,7 +148,7 @@ class AdminGroupController extends AbstractController
 
 
     #[Route('/admin/groups/assignGroupAdmin', name: 'admin.group.assignGroupAdmin')]
-    public function assignGroupAdmin(Request $request, EntityManagerInterface $manager,  SendEmailService $mail): Response
+    public function assignGroupAdmin(Request $request, EntityManagerInterface $manager,  SendEmailService $mail,  UserPasswordEncoderInterface $encoder): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if(!$user->isIsTemporaryPasswordChange()){
@@ -165,12 +165,23 @@ class AdminGroupController extends AbstractController
         $groupe->setPrivateKey($data['newEncryptedKey']);
 
         $admin = $this->getChosenAdmin($this->getAvailableGroupAdmin($users), $data['email']);
-        $admin->getManagedGroup($groupe);
+        $admin->setManagedGroup($groupe);
+       
+
+
         $groupe->setGroupAdmin($admin);
 
         $title = $groupe->getTitle();
         $firstname = $admin->getFirstname();
         $tempKey =  $data['tempKey'];
+
+        $hash = $encoder->encodePassword($admin,$tempKey);
+        $admin->setPassword($hash);
+
+        $admin->setPrivateKey($data['newEncryptedKey']);
+
+        $manager->flush($admin);
+
 
         // Envoi du mail
         $mail->send(
@@ -180,9 +191,7 @@ class AdminGroupController extends AbstractController
             'assigneAdmin',
             compact('title', 'firstname', 'tempKey')
         );
-
-        $manager->flush();
-
+   
         return $this->json(['code' => 200, 'success' => TRUE], 200);
     }
 

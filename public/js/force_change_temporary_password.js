@@ -58,14 +58,14 @@ window.onload = () => {
                         userId
                     }
                     console.log(data);
-                    data.userPrivatekey = encryptData(userPrivatekey, data.password);
+                    data.userPrivatekey = encryptData(data.password, userPrivatekey);
                     
 
                     result = await axios.post(url + '/users/changeUserTempPassword', data);
 
                     if (result.data.success) {
                         window.location = '/logout'
-                        window.location = '/login'
+                   
 
                     }
                 }else{
