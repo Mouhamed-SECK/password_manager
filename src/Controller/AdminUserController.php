@@ -378,6 +378,16 @@ class AdminUserController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/logs', name: 'admin.logs.index-log')]
+    public function passwordLogManager(): Response
+    {
+
+
+        return $this->render('admin/log/index.html.twig', [
+            'controller_name' => 'AdminGroupController'
+        ]);
+    }
+
 
 
 }
