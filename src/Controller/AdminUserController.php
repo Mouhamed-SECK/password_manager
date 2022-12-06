@@ -22,6 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 
 
@@ -248,5 +249,52 @@ class AdminUserController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+
+
+
+    #[Route('/admin/users/delete', name: 'admin.users.delete')]
+    public function deleteUser(Request $request)
+    {   
+        $id = $request->get('id');
+        
+        $em = $this->container->get('doctrine')->getManager();
+    
+        $user = new User();
+        $user = $em->getRepository(User::class)->findOneBy(array('id' => $id));
+
+        $em->remove($user);
+        $em->flush();
+
+        return $this->json(1);
+
+    }
+
+
+   
+#[Route('/admin/users/edit/{id}', name: 'admin.users.edit')]
+    public function editUser(Request $request, $id): Response
+    {
+        $em = $this->container->get('doctrine')->getManager();
+        $user = new User();
+        $user = $em->getRepository(User::class)->findOneBy(array('id' => $id));
+
+
+        $form =  $this->createForm(UserRegistrationType::class, $user);  
+        $form->handleRequest($request) ;
+
+        if ($form->isSubmitted() && $form->isValid()) { 
+            
+            $em->flush();
+
+            return $this->redirectToRoute('admin.users.index');
+        }
+
+        return $this->render('admin/users/editUser.html.twig', [
+            'controller_name' => 'AdminUserController',
+            'form' => $form->createView(),
+        ]);
+    }
+
 
 }
