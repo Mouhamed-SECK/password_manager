@@ -33,8 +33,6 @@
 
                                     {% for groupe in groups %}
 
-                                
-
                                         <tr>
                                             <td>
                                                 {{groupe.id}}
@@ -57,11 +55,35 @@
     
                                             <td>
                                                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                    <button type="button" class="btn btn-outline-secondary"  data-bs-toggle="modal" data-bs-target="#expedit"><i class="icofont-edit text-success"></i></button>
-                                                    <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+                                                    <button type="button" class="btn btn-outline-secondary" onclick="location.href='/admin/groups/edit/{{ groupe.id }}'"><i class="icofont-edit text-success"></i></button>
+                                                    <button id= "{{ groupe.id }}" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteGroup{{ groupe.id }}"><i class="icofont-ui-delete text-danger"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
+
+                                        <div class="modal fade" id="deleteGroup{{ groupe.id }}" aria-hidden="true" >
+                                            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                   <div class="modal-header">
+                                                            <h5 class="modal-title  fw-bold" id="deleteUserLabel"> Supprimer un groupe </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                
+                                                <div class="modal-body">
+                                                    <p> Êtes-vous sûr de vouloir supprimer ce groupe ? </p>
+                                                        
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                                                    <button type="button" id="{{ groupe.id }}" class="btn btn-primary deleteGroup" data-bs-dismiss="modal">Oui</button>
+                                                </div>
+                                            
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                        
                                         {% endfor %}  
                                     </tbody>
                                 </table>
@@ -183,7 +205,23 @@
 
     <script src="/js/crypting.js"></script>
     <script src="/js/create_groupe.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+                         $('.deleteGroup').click(function(){
+                             let id = $(this).attr("id");
+                             $.ajax({
+                                 url: "{{ path('admin.groups.delete') }}",
+                                 type: "POST",
+                                 data: {
+                                      id : id,
+                                     },
+                                     success: function refreshPage() { 
+                                              location.reload();
+                                              
+                                 }
+                                 })
+                                 });
+        </script>	
 
 
 {% endblock %}
