@@ -352,8 +352,6 @@ class AdminUserController extends AbstractController
 
     }
 
-
-   
 #[Route('/admin/users/edit/{id}', name: 'admin.users.edit')]
     public function editUser(Request $request, $id): Response
     {
@@ -377,7 +375,5 @@ class AdminUserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-
-
+    
 }

@@ -207,8 +207,6 @@ class AdminGroupController extends AbstractController
         $admin = $this->getChosenAdmin($this->getAvailableGroupAdmin($users), $data['email']);
         $admin->setManagedGroup($groupe);
        
-
-
         $groupe->setGroupAdmin($admin);
 
         $title = $groupe->getTitle();
@@ -236,11 +234,9 @@ class AdminGroupController extends AbstractController
     }
 
 
-    #[Route('/admin/logs', name: 'admin.logs.index-log')]
+    #[Route('/admin/log', name: 'admin.logs.index-log')]
     public function passwordLogManager(): Response
     {
-
-
         return $this->render('admin/logs/index.html.twig', [
             'controller_name' => 'AdminGroupController'
         ]);

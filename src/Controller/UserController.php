@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Password;;
+use App\Entity\PasswordLog;;
 use App\Repository\UserRepository;
+use App\Repository\PasswordRepository;
+use App\Repository\PasswordLogRepository;
 
 use App\Form\UserRegistrationType;
 use App\Form\ResetPasswordFormType;
@@ -88,7 +92,23 @@ class UserController extends AbstractController
         return $this->json(['code' => 200, 'success' => TRUE], 200);
     }
 
+    #[Route('/users/log/save', name: 'users.logs.save-password-log')]
+    public function savePasswordLog(Request $request, EntityManagerInterface $manager): Response
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-    
+        $log = new PasswordLog();
+        $data = $request->getContent();
+        $data = json_decode($data, true);
 
+        $password = $this->getDoctrine()->getRepository(Password::class)->find($data['passwordId']);
+
+        $log->setConcernUser = $user;
+        $log->setConcernPassword = $password;
+
+        $manager->persist($log);
+        $manager->flush();
+
+        return $this->json(['code' => 200, 'success' => TRUE], 200);
+    }
 }
