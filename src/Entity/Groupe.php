@@ -101,11 +101,11 @@ class Groupe
     }
 
 
-
     public function setPrivateKey($privateKey) 
     {
          $this->privateKey = $privateKey;
     }
+
 
 
     public function setGroupAdmin(?User $groupAdmin): self
