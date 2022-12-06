@@ -33,8 +33,7 @@
                                     <div class="about-info d-flex align-items-center mt-1 justify-content-center flex-column">
                                        <h6 class="mb-0 fw-bold d-block fs-6 mt-2">{{user.groupe.title}}</h6>
                                         <div class="btn-group mt-2" role="group" aria-label="Basic outlined example">
-                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editproject"><i class="icofont-edit text-success"></i></button>
-                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteproject"><i class="icofont-ui-delete text-danger"></i></button>
+                                            <button type="button" data-id="{{ user.id }}" class="confirmModalLink btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteUser{{ user.id }}"><i class="icofont-ui-delete text-danger"></i></button>
                                         </div>  
                                     </div>
                                 </div>
@@ -64,6 +63,28 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="modal fade" id="deleteUser{{ user.id }}" aria-hidden="true" >
+                        <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+                            <div class="modal-content">
+                               <div class="modal-header">
+                                        <h5 class="modal-title  fw-bold" id="deleteUserLabel"> Supprimer un utilisateur </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                            
+                            <div class="modal-body">
+                                <p> Êtes-vous sûr de vouloir supprimer cet utilisateur ? </p>
+                                    
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                                <button type="button" id="{{ user.id }}" class="btn btn-primary deleteUser" data-bs-dismiss="modal">Oui</button>
+                            </div>
+                        
+                            </div>
+                        </div>
+                        
                     </div>
                       {% endfor %}
                 </div>
@@ -121,6 +142,28 @@
     <script src="/js/crypting.js"> </script>
     <script src="/js/create_user.js"> </script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+        <script>
+
+                        $('.deleteUser').click(function(){
+                             let id = $(this).attr("id");
+                             
+                             $.ajax({
+                                 url: "{{ path('admin.users.delete') }}",
+                                 type: "POST",
+                                 data: {
+                                      id : id,
+                                     },
+                                     
+                                     success: function refreshPage() { 
+                                              location.reload();
+                                              
+                                 }
+                                 })
+                                 });
+                                 
+        </script>	
 
 
 {% endblock %}
