@@ -100,10 +100,19 @@ class Groupe
         return $this->privateKey;
     }
 
+
+    public function setPrivateKey(string $privateKey)
+    {
+        $this->privateKey = $privateKey;
+    }
+
+
+
     public function setPrivateKey($privateKey) 
     {
          $this->privateKey = $privateKey;
     }
+
 
     public function setGroupAdmin(?User $groupAdmin): self
     {

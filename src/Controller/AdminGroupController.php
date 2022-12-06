@@ -146,6 +146,46 @@ class AdminGroupController extends AbstractController
         return $this->json(['code' => 200, 'success' => TRUE], 200);
     }
 
+    #[Route('/admin/groups/delete', name: 'admin.groups.delete')]
+    public function deleteGroupe(Request $request)
+    {
+        $id = $request->get('id');
+        $em = $this->container->get('doctrine')->getManager();
+    
+        $groupe = new Groupe();
+        $groupe = $em->getRepository(Groupe::class)->findOneBy(array('id' => $id));
+
+        $em->remove($groupe);
+        $em->flush();
+      
+        return $this->json(1);
+
+    }
+
+    #[Route('/admin/groups/edit/{id}', name: 'admin.groups.edit')]
+    public function editGroup(Request $request, $id): Response
+    {
+        $em = $this->container->get('doctrine')->getManager();
+        $groupe = new Groupe();
+        $groupe = $em->getRepository(Groupe::class)->findOneBy(array('id' => $id));
+
+
+        $form =  $this->createForm(GroupType::class, $groupe);  
+        $form->handleRequest($request) ;
+
+        if ($form->isSubmitted() && $form->isValid()) { 
+            
+            $em->flush();
+
+            return $this->redirectToRoute('admin.group.index');
+        }
+
+        return $this->render('admin/group/editGroup.html.twig', [
+            'controller_name' => 'AdminGroupController',
+            'form' => $form->createView(),
+        ]);
+    }
+
 
     #[Route('/admin/groups/assignGroupAdmin', name: 'admin.group.assignGroupAdmin')]
     public function assignGroupAdmin(Request $request, EntityManagerInterface $manager,  SendEmailService $mail,  UserPasswordEncoderInterface $encoder): Response
