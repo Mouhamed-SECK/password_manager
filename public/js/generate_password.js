@@ -1,13 +1,11 @@
-'use strict';
-const passwordEl = document.getElementById('password'),
-  lengthEl = document.getElementById('length'),
-  uppercaseEl = document.getElementById('uppercase'),
-  lowercaseEl = document.getElementById('lowercase'),
-  numbersEl = document.getElementById('numbers'),
-  symbolsEl = document.getElementById('symbols'),
-  generateEl = document.getElementById('generate')
-;
-
+"use strict";
+const passwordEl = document.getElementById("password"),
+  lengthEl = document.getElementById("length"),
+  uppercaseEl = document.getElementById("uppercase"),
+  lowercaseEl = document.getElementById("lowercase"),
+  numbersEl = document.getElementById("numbers"),
+  symbolsEl = document.getElementById("symbols"),
+  generateEl = document.getElementById("generate");
 const randomFunc = {
   lower: getRandomLower,
   upper: getRandomUpper,
@@ -30,14 +28,12 @@ clipboardEl.addEventListener('click', () => {
   textarea.remove();
 }); */
 
-generateEl.addEventListener('click', () => {
-
+generateEl.addEventListener("click", () => {
   const length = +lengthEl.value,
     hasLower = lowercaseEl.checked,
     hasUpper = uppercaseEl.checked,
     hasNumber = numbersEl.checked,
     hasSymbol = symbolsEl.checked;
-
 
   passwordEl.value = generatePassword(
     hasLower,
@@ -49,13 +45,13 @@ generateEl.addEventListener('click', () => {
 });
 
 function generatePassword(lower, upper, number, symbol, length) {
-  let generatedPassword = '';
+  let generatedPassword = "";
   const typesCount = lower + upper + number + symbol,
     typesArr = [{ lower }, { upper }, { number }, { symbol }].filter(
       (item) => Object.values(item)[0]
     );
   if (typesCount === 0) {
-    return '';
+    return "";
   }
 
   for (let i = 0; i < length; i += typesCount) {
@@ -83,6 +79,6 @@ function getRandomNumber() {
 }
 
 function getRandomSymbol() {
-  const symbols = '!@#$%*&(){}[]=<>/,.';
+  const symbols = "!@#$%*&(){}[]=<>/,.";
   return symbols[Math.floor(Math.random() * symbols.length)];
 }

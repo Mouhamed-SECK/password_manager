@@ -10,7 +10,7 @@ class PasswordLog
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: "integer")]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Password::class)]
@@ -21,13 +21,12 @@ class PasswordLog
     #[ORM\JoinColumn(nullable: false)]
     private $concernUser;
 
-    #[ORM\Column(type: 'time')]
+    #[ORM\Column(type: "time")]
     private $createdAt;
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        
     }
 
     public function getId(): ?int

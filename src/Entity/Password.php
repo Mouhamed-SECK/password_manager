@@ -10,43 +10,40 @@ class Password
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: "integer")]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     private $description;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     private $url;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $image;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     private $encryptedPassword;
 
-    #[ORM\ManyToOne(targetEntity: Groupe::class, inversedBy: 'passwords')]
+    #[ORM\ManyToOne(targetEntity: Groupe::class, inversedBy: "passwords")]
     #[ORM\JoinColumn(nullable: false)]
     private $groupe;
 
-    #[ORM\Column(type: 'datetime' )]
+    #[ORM\Column(type: "datetime")]
     private $createdAt;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     private $usedLogin;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     private $recuparationEmail;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     private $title;
-
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-  
-        
     }
 
     public function getId(): ?int
@@ -58,8 +55,6 @@ class Password
     {
         return $this->description;
     }
-
-    
 
     public function setDescription(string $description): self
     {

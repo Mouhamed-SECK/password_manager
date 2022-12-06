@@ -22,15 +22,20 @@ class Groupe
     #[ORM\Column(length: 255)]
     private ?string $privateKey = null;
 
-    #[ORM\OneToMany(mappedBy: 'Groupe', targetEntity: User::class)]
-    private  $users;
+    #[ORM\OneToMany(mappedBy: "Groupe", targetEntity: User::class)]
+    private $users;
 
-    #[ORM\OneToOne(mappedBy: 'managedGroup', targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[
+        ORM\OneToOne(
+            mappedBy: "managedGroup",
+            targetEntity: User::class,
+            cascade: ["persist", "remove"]
+        )
+    ]
     private $groupAdmin;
 
-    #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: Password::class)]
+    #[ORM\OneToMany(mappedBy: "groupe", targetEntity: Password::class)]
     private $passwords;
-
 
     public function getId(): ?int
     {
@@ -55,11 +60,11 @@ class Groupe
         $this->passwords = new ArrayCollection();
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getTitle();
     }
 
-    
     public function getUsers()
     {
         return $this->users;
@@ -67,11 +72,8 @@ class Groupe
 
     public function addUser(User $user): self
     {
-     
-        
-            $this->users->add($user);
-            $user->setGroupe($this);
-    
+        $this->users->add($user);
+        $user->setGroupe($this);
 
         return $this;
     }
@@ -88,25 +90,20 @@ class Groupe
         return $this;
     }
 
- 
     public function getGroupAdmin(): ?User
     {
         return $this->groupAdmin;
     }
-
 
     public function getPrivateKey(): ?string
     {
         return $this->privateKey;
     }
 
-
-    public function setPrivateKey($privateKey) 
+    public function setPrivateKey($privateKey)
     {
-         $this->privateKey = $privateKey;
+        $this->privateKey = $privateKey;
     }
-
-
 
     public function setGroupAdmin(?User $groupAdmin): self
     {

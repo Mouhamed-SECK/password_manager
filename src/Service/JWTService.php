@@ -9,20 +9,24 @@ class JWTService
 
     /**
      * Génération du JWT
-     * @param array $header 
-     * @param array $payload 
-     * @param string $secret 
-     * @param int $validity 
-     * @return string 
+     * @param array $header
+     * @param array $payload
+     * @param string $secret
+     * @param int $validity
+     * @return string
      */
-    public function generate(array $header, array $payload, string $secret, int $validity = 10800): string
-    {
-        if($validity > 0){
+    public function generate(
+        array $header,
+        array $payload,
+        string $secret,
+        int $validity = 10800
+    ): string {
+        if ($validity > 0) {
             $now = new DateTimeImmutable();
             $exp = $now->getTimestamp() + $validity;
-    
-            $payload['iat'] = $now->getTimestamp();
-            $payload['exp'] = $exp;
+
+            $payload["iat"] = $now->getTimestamp();
+            $payload["exp"] = $exp;
         }
 
         // On encode en base64
@@ -30,20 +34,37 @@ class JWTService
         $base64Payload = base64_encode(json_encode($payload));
 
         // On "nettoie" les valeurs encodées (retrait des +, / et =)
-        $base64Header = str_replace(['+', '/', '='], ['-', '_', ''], $base64Header);
-        $base64Payload = str_replace(['+', '/', '='], ['-', '_', ''], $base64Payload);
+        $base64Header = str_replace(
+            ["+", "/", "="],
+            ["-", "_", ""],
+            $base64Header
+        );
+        $base64Payload = str_replace(
+            ["+", "/", "="],
+            ["-", "_", ""],
+            $base64Payload
+        );
 
         // On génère la signature
         $secret = base64_encode($secret);
 
-        $signature = hash_hmac('sha256', $base64Header . '.' . $base64Payload, $secret, true);
+        $signature = hash_hmac(
+            "sha256",
+            $base64Header . "." . $base64Payload,
+            $secret,
+            true
+        );
 
         $base64Signature = base64_encode($signature);
 
-        $base64Signature = str_replace(['+', '/', '='], ['-', '_', ''], $base64Signature);
+        $base64Signature = str_replace(
+            ["+", "/", "="],
+            ["-", "_", ""],
+            $base64Signature
+        );
 
         // On crée le token
-        $jwt = $base64Header . '.' . $base64Payload . '.' . $base64Signature;
+        $jwt = $base64Header . "." . $base64Payload . "." . $base64Signature;
 
         return $jwt;
     }
@@ -62,7 +83,7 @@ class JWTService
     public function getPayload(string $token): array
     {
         // On démonte le token
-        $array = explode('.', $token);
+        $array = explode(".", $token);
 
         // On décode le Payload
         $payload = json_decode(base64_decode($array[1]), true);
@@ -74,7 +95,7 @@ class JWTService
     public function getHeader(string $token): array
     {
         // On démonte le token
-        $array = explode('.', $token);
+        $array = explode(".", $token);
 
         // On décode le Header
         $header = json_decode(base64_decode($array[0]), true);
@@ -89,7 +110,7 @@ class JWTService
 
         $now = new DateTimeImmutable();
 
-        return $payload['exp'] < $now->getTimestamp();
+        return $payload["exp"] < $now->getTimestamp();
     }
 
     // On vérifie la signature du Token

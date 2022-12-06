@@ -10,38 +10,37 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use Symfony\Component\HttpFoundation\Request;
 
-
-
-
 class PasswordController extends AbstractController
 {
-    #[Route('/admin/password/create', name: 'admin.password.create')]
+    #[Route("/admin/password/create", name: "admin.password.create")]
     public function new(): Response
     {
-        return $this->render('password/new.html.twig', [
-            'controller_name' => 'PasswordController',
+        return $this->render("password/new.html.twig", [
+            "controller_name" => "PasswordController",
         ]);
     }
 
-
-    #[Route('/admin/password/save', name: 'admin.password.save')]
-    public function create(Request $request, EntityManagerInterface $manager): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    #[Route("/admin/password/save", name: "admin.password.save")]
+    public function create(
+        Request $request,
+        EntityManagerInterface $manager
+    ): Response {
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         $password = new Password();
-       
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->get("security.token_storage")
+            ->getToken()
+            ->getUser();
 
         $data = $request->getContent();
         $data = json_decode($data, true);
 
-        $password->setTitle($data['title']);
-        $password->setDescription($data['description']);
-        $password->setUrl($data['usedUrl']);
-        $password->setEncryptedPassword($data['createdPassword']);
-        $password->setRecuparationEmail($data['email']);
-        $password->setUsedLogin($data['login']);
+        $password->setTitle($data["title"]);
+        $password->setDescription($data["description"]);
+        $password->setUrl($data["usedUrl"]);
+        $password->setEncryptedPassword($data["createdPassword"]);
+        $password->setRecuparationEmail($data["email"]);
+        $password->setUsedLogin($data["login"]);
         $password->setGroupe($user->getManagedGroup());
 
         $user->getManagedGroup()->addPassword($password);
@@ -49,7 +48,6 @@ class PasswordController extends AbstractController
         $manager->persist($password);
         $manager->flush();
 
-        return $this->json(['code' => 200, 'success' => TRUE], 200);
+        return $this->json(["code" => 200, "success" => true], 200);
     }
-
 }

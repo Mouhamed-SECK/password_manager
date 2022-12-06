@@ -1,149 +1,114 @@
-
 const saveGoupe = async (url, data) => {
-    try {
-        const result = await axios.post(url, data);
-      
-    } catch (error) {
-        if (error.response.status === 403) {
-            window.location = '/login'
-        }
+  try {
+    const result = await axios.post(url, data);
+  } catch (error) {
+    if (error.response.status === 403) {
+      window.location = "/login";
     }
-}
-
+  }
+};
 
 window.onload = () => {
-    const url = window.location.href;
-    const GroupForm = document.querySelector('[name="group"]');
+  const url = window.location.href;
+  const GroupForm = document.querySelector('[name="group"]');
 
-    const incorrectPassword = document.querySelector('#incorrectPassword');
-    const designeAdminButton = document.querySelector('#saveAdmin');
+  const incorrectPassword = document.querySelector("#incorrectPassword");
+  const designeAdminButton = document.querySelector("#saveAdmin");
 
+  const paginationBUtton = document.querySelectorAll(".page-item");
 
-    const paginationBUtton = document.querySelectorAll(".page-item");
+  let addAmdinBtns;
+  let groupId;
 
-    
+  paginationBUtton.forEach((btn) => {
+    btn.addEventListener("click", setupIdsListener);
+  });
 
-    let addAmdinBtns;
-    let groupId;
-
-    paginationBUtton.forEach(btn => {
-        btn.addEventListener('click', setupIdsListener)
+  function setupIdsListener() {
+    addAmdinBtns = document.querySelectorAll(".addAmdinBtn");
+    addAmdinBtns.forEach((btn) => {
+      btn.addEventListener("click", function handleClick(event) {
+        groupId = parseInt(btn.getAttribute("data-id"));
       });
+    });
+  }
 
+  setupIdsListener();
 
-    function setupIdsListener () {
+  GroupForm.addEventListener("submit", onSubmit);
+  designeAdminButton.addEventListener("click", handleAdminDesagnation);
 
-        addAmdinBtns=  document.querySelectorAll('.addAmdinBtn')
-        addAmdinBtns.forEach(btn => {
-            btn.addEventListener('click', function handleClick(event) {
-                 groupId = parseInt(btn.getAttribute('data-id'))
-        
-            });
-          });
+  async function handleAdminDesagnation(event) {
+    event.preventDefault();
+
+    const password = document.querySelector("#managePasswordInput").value;
+    const email = document.querySelector("#adminEmail").value;
+
+    console.log(email, password);
+
+    try {
+      console.log(groupId);
+      let result = await axios.post(url + "/verify", { password });
+
+      if (result.data.isCorrectPassword) {
+        incorrectPassword.innerText = "";
+        result = await axios.post(url + "/getGroupKey", { groupId });
+        groupKey = result.data.key;
+        console.log("Encrypted group key with super admin password", groupKey);
+
+        groupKey = decryptData(password, groupKey);
+
+        console.log("decripted group key", groupKey);
+
+        const tempKey = generateSceureKey();
+
+        newEncryptedKey = encryptData(groupKey, tempKey);
+
+        data = {
+          newEncryptedKey,
+          tempKey,
+          email,
+          groupId,
+        };
+        result = await axios.post(url + "/assignGroupAdmin", data);
+        window.location.reload();
+      } else {
+        incorrectPassword.innerText = "Votre mot de pass est incorrect";
+      }
+    } catch (error) {
+      if (error.response.status === 403) {
+        window.location = "/login";
+      }
     }
+  }
 
-    setupIdsListener()
+  async function onSubmit(event) {
+    event.preventDefault();
 
-   
-    GroupForm.addEventListener("submit", onSubmit);
-    designeAdminButton.addEventListener("click", handleAdminDesagnation);
+    password = GroupForm.elements["group_privateKey"].value;
+    title = GroupForm.elements["group_title"].value;
 
+    try {
+      const result = await axios.post(url + "/verify", { password });
 
+      if (result.data.isCorrectPassword) {
+        groupKey = encryptData(password, generateSceureKey());
 
-    async function handleAdminDesagnation(event) {
-        event.preventDefault();
+        console.log(groupKey);
 
-        const password = document.querySelector("#managePasswordInput").value;
-        const email = document.querySelector("#adminEmail").value;
+        data = {
+          groupKey,
+          title,
+        };
 
-
-        console.log(email,password )
-
-
-        try {
-            console.log(groupId)
-            let result = await axios.post(url + '/verify', {password});
-
-    
-            if (result.data.isCorrectPassword) {
-            
-                incorrectPassword.innerText = ""
-                result = await  axios.post(url + '/getGroupKey', {groupId}) 
-                groupKey = result.data.key;
-                console.log("Encrypted group key with super admin password", groupKey)
-    
-                groupKey = decryptData(password, groupKey);
-
-                console.log("decripted group key", groupKey)
-
-                const tempKey = generateSceureKey();
-
-                newEncryptedKey = encryptData(groupKey, tempKey)
-
-                data = {
-                    newEncryptedKey, 
-                    tempKey,
-                    email,
-                    groupId
-
-                }
-                result = await  axios.post(url + '/assignGroupAdmin', data) 
-                window.location.reload()  ;       
-
-                
-               
-            } else {
-                incorrectPassword.innerText = "Votre mot de pass est incorrect"
-            }
-                  
-        } catch (error) {
-            if (error.response.status === 403) {
-                window.location = '/login'
-            }
-        }
-
-
-    
-
-
-
+        console.log(data);
+        await saveGoupe(url + "/save", data);
+        window.location.reload();
+      }
+    } catch (error) {
+      if (error.response.status === 403) {
+        window.location = "/login";
+      }
     }
-
-
-    async function onSubmit(event) {
-        event.preventDefault();
-     
-
-        password = GroupForm.elements['group_privateKey'].value;
-        title = GroupForm.elements['group_title'].value;
-
-     
-        try {
-            const result = await axios.post(url + '/verify', {password});
-         
-            if (result.data.isCorrectPassword) {
-                groupKey = encryptData(password, generateSceureKey());
-
-            console.log(groupKey);
-
-                data = {
-                    groupKey,
-                    title
-                }
-
-                console.log(data)
-                await saveGoupe(url + '/save', data); 
-                window.location.reload()  ;       
-            }
-
-          
-          
-        } catch (error) {
-            if (error.response.status === 403) {
-                window.location = '/login'
-            }
-        }
-    }
-
-   
-}
+  }
+};

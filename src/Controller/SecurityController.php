@@ -9,7 +9,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route(path: '/login', name: 'app_login')]
+    #[Route(path: "/login", name: "app_login")]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
@@ -21,18 +21,24 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['controller_name'=>'login', 'last_username' => $lastUsername, 'error' => $error]);
+        return $this->render("security/login.html.twig", [
+            "controller_name" => "login",
+            "last_username" => $lastUsername,
+            "error" => $error,
+        ]);
     }
 
-    #[Route(path: '/logout', name: 'app_logout')]
+    #[Route(path: "/logout", name: "app_logout")]
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException(
+            "This method can be blank - it will be intercepted by the logout key on your firewall."
+        );
     }
 
-    #[Route(path: 'error/403', name: 'error_403')]
+    #[Route(path: "error/403", name: "error_403")]
     public function error_403(): Response
     {
-        return $this->render('security/error_403.html.twig');
+        return $this->render("security/error_403.html.twig");
     }
 }

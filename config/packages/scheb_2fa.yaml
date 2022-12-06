@@ -1,10 +1,10 @@
 scheb_two_factor:
-    security_tokens:
-        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
-        - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
+  security_tokens:
+    - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+    - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
 
-    email:
-        digits: 6
-        enabled: true
-        sender_email: no-reply@test.com
-        sender_name: John Doe
+  email:
+    digits: 6
+    enabled: true
+    sender_email: no-reply@test.com
+    sender_name: John Doe

@@ -9,17 +9,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResetPasswordRequestFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('email', EmailType::class, [
-                'label' => 'Entrez votre e-mail',
-                'attr' => [
-                    'placeholder' => 'exemple@email.fr',
-                    'class' => 'form-control'
-                ]
-            ])
-        ;
+    public function buildForm(
+        FormBuilderInterface $builder,
+        array $options
+    ): void {
+        $builder->add("email", EmailType::class, [
+            "label" => "Entrez votre e-mail",
+            "attr" => [
+                "placeholder" => "exemple@email.fr",
+                "class" => "form-control",
+            ],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

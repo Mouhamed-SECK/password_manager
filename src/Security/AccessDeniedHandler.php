@@ -9,8 +9,10 @@ use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 
 class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
-    public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
-    {
-        return new RedirectResponse($this->urlGenerator->generate('error_403'));
+    public function handle(
+        Request $request,
+        AccessDeniedException $accessDeniedException
+    ): ?Response {
+        return new RedirectResponse($this->urlGenerator->generate("error_403"));
     }
 }

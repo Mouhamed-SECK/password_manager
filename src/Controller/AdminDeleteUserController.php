@@ -8,11 +8,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminDeleteUserController extends AbstractController
 {
-    #[Route('/admin/delete/user', name: 'app_admin_delete_user')]
+    #[Route("/admin/delete/user", name: "app_admin_delete_user")]
     public function index(): Response
     {
-        return $this->render('admin_delete_user/index.html.twig', [
-            'controller_name' => 'AdminDeleteUserController',
+        return $this->render("admin_delete_user/index.html.twig", [
+            "controller_name" => "AdminDeleteUserController",
         ]);
     }
 }

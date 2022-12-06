@@ -20,87 +20,92 @@ class HomeController extends AbstractController
     private $manager;
     private $passwordEncoder;
 
-    public function __construct(UserRepository $repository, EntityManagerInterface $manager, UserPasswordEncoderInterface $passwordEncoder)
-    {
+    public function __construct(
+        UserRepository $repository,
+        EntityManagerInterface $manager,
+        UserPasswordEncoderInterface $passwordEncoder
+    ) {
         $this->repository = $repository;
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    #[Route('/home', name: 'home')]
+    #[Route("/home", name: "home")]
     public function home(): Response
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->get("security.token_storage")
+            ->getToken()
+            ->getUser();
 
-        if(!$user->isIsTemporaryPasswordChange()){
-            return $this->redirectToRoute('security.reset-temporary-password');
+        if (!$user->isIsTemporaryPasswordChange()) {
+            return $this->redirectToRoute("security.reset-temporary-password");
         }
         $passwords = $this->manager->getRepository(Password::class)->findAll();
-    
 
-        return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
-            'passwords'  =>  $passwords
+        return $this->render("home/index.html.twig", [
+            "controller_name" => "HomeController",
+            "passwords" => $passwords,
         ]);
     }
 
-
-    #[Route('/admin/home', name: 'Adminhome')]
+    #[Route("/admin/home", name: "Adminhome")]
     public function adminHome(): Response
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        if(!$user->isIsTemporaryPasswordChange()){
-            return $this->redirectToRoute('security.reset-temporary-password');
+        $user = $this->get("security.token_storage")
+            ->getToken()
+            ->getUser();
+        if (!$user->isIsTemporaryPasswordChange()) {
+            return $this->redirectToRoute("security.reset-temporary-password");
         }
 
+        $users = $this->repository->findGroupUsers(
+            $user->getManagedGroup()->getId()
+        );
 
-        $users = $this->repository->findGroupUsers($user->getManagedGroup()->getId());
-
-    
-
-        return $this->render('home/adminHome.html.twig', [
-            'controller_name' => 'HomeController',
-            'users'  =>  $users
+        return $this->render("home/adminHome.html.twig", [
+            "controller_name" => "HomeController",
+            "users" => $users,
         ]);
     }
 
-
-    #[Route('/', name: 'index')]
+    #[Route("/", name: "index")]
     public function index(): Response
     {
-        if (   $user = $this->get('security.token_storage')->getToken() == null) {
-            return $this->redirectToRoute('home');
+        if ($user = $this->get("security.token_storage")->getToken() == null) {
+            return $this->redirectToRoute("home");
         }
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-    
-        if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            return $this->redirectToRoute('admin.group.index');
+        $user = $this->get("security.token_storage")
+            ->getToken()
+            ->getUser();
 
-        } else if  ((in_array('ROLE_ADMIN', $user->getRoles()))) {
-            
-            return $this->redirectToRoute('Adminhome');
-    
+        if (in_array("ROLE_SUPER_ADMIN", $user->getRoles())) {
+            return $this->redirectToRoute("admin.group.index");
+        } elseif (in_array("ROLE_ADMIN", $user->getRoles())) {
+            return $this->redirectToRoute("Adminhome");
         } else {
-            return $this->redirectToRoute('home');
-
+            return $this->redirectToRoute("home");
         }
     }
 
-    #[Route('/reset-temporary-password', name: 'security.reset-temporary-password')]
-    public function forcePasswordChange(Request $request, EntityManagerInterface $manager): Response
-    {  
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        if($user->isIsTemporaryPasswordChange()){
-          
-            return $this->redirectToRoute('home');
+    #[
+        Route(
+            "/reset-temporary-password",
+            name: "security.reset-temporary-password"
+        )
+    ]
+    public function forcePasswordChange(
+        Request $request,
+        EntityManagerInterface $manager
+    ): Response {
+        $user = $this->get("security.token_storage")
+            ->getToken()
+            ->getUser();
+        if ($user->isIsTemporaryPasswordChange()) {
+            return $this->redirectToRoute("home");
         }
 
-        return $this->render('security/reset_temporary_password.html.twig', [
-            'controller_name' => 'HomeController',
+        return $this->render("security/reset_temporary_password.html.twig", [
+            "controller_name" => "HomeController",
         ]);
     }
-
-
-
-
 }

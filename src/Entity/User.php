@@ -32,35 +32,41 @@ class User implements UserInterface, TwoFactorInterface
     #[ORM\Column(length: 255)]
     private ?string $login = null;
 
-    #[ORM\Column(length: 255,  nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $password;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[ORM\Column(type: "string", length: 100, nullable: true)]
     private $resetToken;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\ManyToOne(inversedBy: "users")]
     #[ORM\JoinColumn(nullable: false)]
     private ?Groupe $groupe = null;
 
     #[ORM\Column]
     private array $roles = [];
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: "boolean")]
     private $isVerified = false;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: "boolean")]
     private $isTemporaryPasswordChange = false;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isKeyChange =false;
+    #[ORM\Column(type: "boolean")]
+    private $isKeyChange = false;
 
-    #[ORM\Column(type: 'string', length: 255, nullable : true)]
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $privateKey;
 
-    #[ORM\OneToOne(inversedBy: 'groupAdmin', targetEntity: Groupe::class, cascade: ['persist', 'remove'])]
+    #[
+        ORM\OneToOne(
+            inversedBy: "groupAdmin",
+            targetEntity: Groupe::class,
+            cascade: ["persist", "remove"]
+        )
+    ]
     private $managedGroup;
 
     public function __construct()
@@ -157,7 +163,7 @@ class User implements UserInterface, TwoFactorInterface
         return $this;
     }
 
-     /**
+    /**
      * A visual identifier that represents this user.
      *
      * @see UserInterface
@@ -167,8 +173,7 @@ class User implements UserInterface, TwoFactorInterface
         return (string) $this->login;
     }
 
-
-     /**
+    /**
      * @see UserInterface
      */
     public function getSalt()
@@ -185,7 +190,6 @@ class User implements UserInterface, TwoFactorInterface
         // $this->plainPassword = null;
     }
 
-
     public function getGroupe(): ?groupe
     {
         return $this->groupe;
@@ -198,14 +202,14 @@ class User implements UserInterface, TwoFactorInterface
         return $this;
     }
 
-   /**
+    /**
      * @see UserInterface
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = "ROLE_USER";
 
         return array_unique($roles);
     }
@@ -250,7 +254,6 @@ class User implements UserInterface, TwoFactorInterface
         return $this->groupes;
     }
 
-
     public function isIsVerified(): ?bool
     {
         return $this->isVerified;
@@ -275,21 +278,20 @@ class User implements UserInterface, TwoFactorInterface
         return $this;
     }
 
-
     public function isIsTemporaryPasswordChange(): ?bool
     {
         return $this->isTemporaryPasswordChange;
     }
 
-    public function setIsTemporaryPassword(bool $isTemporaryPasswordChange): self
-    {
+    public function setIsTemporaryPassword(
+        bool $isTemporaryPasswordChange
+    ): self {
         $this->isTemporaryPasswordChange = $isTemporaryPasswordChange;
 
         return $this;
     }
-    
-    public function getPrivateKey(): ?string
 
+    public function getPrivateKey(): ?string
     {
         return $this->privateKey;
     }
@@ -312,7 +314,4 @@ class User implements UserInterface, TwoFactorInterface
 
         return $this;
     }
-
-
-
 }
