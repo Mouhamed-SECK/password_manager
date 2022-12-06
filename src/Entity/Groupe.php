@@ -106,14 +106,6 @@ class Groupe
         $this->privateKey = $privateKey;
     }
 
-
-
-    public function setPrivateKey($privateKey) 
-    {
-         $this->privateKey = $privateKey;
-    }
-
-
     public function setGroupAdmin(?User $groupAdmin): self
     {
         // unset the owning side of the relation if necessary
