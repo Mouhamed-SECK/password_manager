@@ -6,19 +6,21 @@ window.onload = () => {
     const incorrectPassword = document.querySelector('#incorrectPassword');
     const PasswordForm = document.querySelector('#passwordForm');
     const decryptedData = document.querySelector('#decryptedPassword');
-
+    const passwordIdInput = document.querySelector('#passwordIdInput');
 
 
     
 
     let privateKey;
     let encryptedPassword;
+    let passwordId;
 
     showPasswordBtns=  document.querySelectorAll('.showpassword')
     showPasswordBtns.forEach(btn => {
         btn.addEventListener('click', function handleClick(event) {
             privateKey = btn.getAttribute('data-privateKey').toString().trim()
             encryptedPassword = btn.getAttribute('data-encryptedPassword').toString().trim()
+            passwordId = passwordIdInput.value;   
 
     
         });
@@ -47,6 +49,14 @@ window.onload = () => {
                incorrectPassword.innerHTML = ""
                decryptedData.style.display = "block";
 
+               console.log(passwordId)
+               
+             
+             
+             
+             
+             
+               result = await axios.post(url + '/log/save', {passwordId});
 
       
    
