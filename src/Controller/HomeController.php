@@ -35,7 +35,7 @@ class HomeController extends AbstractController
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
-        $passwords = $this->manager->getRepository(Password::class)->findAll();
+        $passwords = $user->getGroupe()->getPasswords();
     
 
         return $this->render('home/index.html.twig', [
@@ -49,10 +49,11 @@ class HomeController extends AbstractController
     public function adminHome(): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
+
+
         if(!$user->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
-
 
         $users = $this->repository->findGroupUsers($user->getManagedGroup()->getId());
 

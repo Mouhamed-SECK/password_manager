@@ -7,9 +7,10 @@ window.onload = () => {
     const PasswordForm = document.querySelector('#passwordForm');
     const decryptedData = document.querySelector('#decryptedPassword');
 
+    const login = document.querySelector('#login');
+    const plainPassword = document.querySelector('#password');
 
-
-    
+    let plainLogin;
 
     let privateKey;
     let encryptedPassword;
@@ -19,6 +20,8 @@ window.onload = () => {
         btn.addEventListener('click', function handleClick(event) {
             privateKey = btn.getAttribute('data-privateKey').toString().trim()
             encryptedPassword = btn.getAttribute('data-encryptedPassword').toString().trim()
+            plainLogin = btn.getAttribute('data-login').toString().trim()
+
 
     
         });
@@ -45,15 +48,25 @@ window.onload = () => {
     
             if (result.data.isCorrectPassword) {
                incorrectPassword.innerHTML = ""
-               decryptedData.style.display = "block";
 
-
-      
-   
                const key = decryptData(password, privateKey); 
                const Realpassword  = decryptData(key, encryptedPassword);
 
-               console.log("DEcrypted Data ",  'uC5!cW5(pY3$zI5<hK1#')
+               console.log(decryptedData)
+
+               decryptedData.classList.remove("d-none")
+
+               plainPassword.value = Realpassword;
+               login.value = plainLogin;
+
+
+                setTimeout(() => {
+                    plainPassword.value = "";
+                    login.value = "";
+
+                    window.location.reload() ;     
+                }, 5000)
+
 
 
             } else {

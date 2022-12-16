@@ -51,7 +51,6 @@ const decryptData = (password , secret) => {
 
 }
 
-const generateSceureKey =()  => CryptoJS.lib.WordArray.random(32).toString(CryptoJS.enc.Base64);
-
+const generateSceureKey =(nbBit=32)  => CryptoJS.lib.WordArray.random(nbBit).toString(CryptoJS.enc.Base64);
 
 

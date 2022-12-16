@@ -80,7 +80,11 @@ class UserController extends AbstractController
         $hash = $encoder->encodePassword($user,$data['password']);
         $user->setPassword($hash);
         $user->setPrivateKey($data['userPrivatekey']);
-        $user->getManagedGroup()->setPrivateKey($data['userPrivatekey']);
+
+        if (  $user->getManagedGroup() != null) {
+
+            $user->getManagedGroup()->setPrivateKey($data['userPrivatekey']);
+        }
 
 
         $manager->flush($user);

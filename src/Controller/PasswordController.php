@@ -18,6 +18,7 @@ class PasswordController extends AbstractController
     #[Route('/admin/password/create', name: 'admin.password.create')]
     public function new(): Response
     {
+        
         return $this->render('password/new.html.twig', [
             'controller_name' => 'PasswordController',
         ]);

@@ -4,6 +4,8 @@ window.onload = () => {
 
     const incorrectPassword = document.querySelector('#incorrectPassword');
 
+    let groupKey = document.getElementById("privateKey").value;
+
     let groupId = parseInt(document.querySelector('#group-id').value);
    
 
@@ -39,20 +41,16 @@ window.onload = () => {
                 console.log("it's okay");
                 incorrectPassword.innerText = ""
 
-               
-                result = await  axios.post(url + '/admin/groups/getGroupKey', {groupId}) 
-                groupKey = result.data.key;
                 console.log("Encrypted group key with super admin password", groupKey)
-
 
                 groupKey = decryptData(password, groupKey);
 
                 console.log("decripted group key", groupKey)
 
-                const tempPassword = generateSceureKey();
+                const tempPassword = generateSceureKey(12);
                 data.tempPassword = tempPassword;
 
-                data.privateKey = encryptData(groupKey, tempPassword)
+                data.privateKey = encryptData(tempPassword, groupKey)
 
 
                 console.log(data)
@@ -67,11 +65,6 @@ window.onload = () => {
 
                 }
 
-
-            
-
-                
-               
             } else {
                 incorrectPassword.innerText = "Votre mot de pass est incorrect"
             }

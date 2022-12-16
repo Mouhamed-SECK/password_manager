@@ -3,6 +3,9 @@ window.onload = () => {
     const AdminpasswordForm = document.querySelector("#AdminpasswordForm");
     const adminData = document.querySelector("#adminData");
 
+
+    let groupKey = document.getElementById("privateKey").value;
+
     const url = window.location.origin;
 
     let groupId = parseInt(adminData.value)
@@ -49,8 +52,8 @@ window.onload = () => {
             if (result.data.isCorrectPassword) {
                incorrectPassword.innerHTML = ""
 
-               result = await  axios.post(url + '/admin/groups/getGroupKey', {groupId}) 
-               let groupKey = result.data.key;
+             
+          
                console.log("Encrypted group key with super admin password", groupKey)
    
                groupKey = decryptData(password, groupKey);
@@ -60,6 +63,11 @@ window.onload = () => {
                console.log(data)
 
                 result = await axios.post(url + '/admin/password/save', data);
+
+                if (result.data.success) {
+                  window.location.reload() ;     
+
+              } 
                
             } else {
               incorrectPassword.innerHTML = "Mot de passe incorect"

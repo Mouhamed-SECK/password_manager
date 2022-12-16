@@ -76,7 +76,7 @@
 
                                                     <div class="d-flex align-items-center justify-content-between mb-2">
                                                         <h4 class="small fw-bold mb-0">Niveau se securité</h4>
-                                                        <button class="small btn  btn-primary text-white p-1 showpassword " data-privateKey="{{app.user.privateKey}}"  data-encryptedPassword="{{password.encryptedPassword}}"  data-bs-toggle="modal" data-bs-target="#showPasswordModal"><i class="icofont-eye-alt"></i> Voir Mot de pass</button>
+                                                        <button class="small btn  btn-primary text-white p-1 showpassword " data-privateKey="{{app.user.privateKey}}"  data-login="{{password.usedLogin}}" data-encryptedPassword="{{password.encryptedPassword}}"  data-bs-toggle="modal" data-bs-target="#showPasswordModal"><i class="icofont-eye-alt"></i> Voir Mot de pass</button>
                                                     </div>
                                                     <div class="progress" style="height: 8px;">
                                                         <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
@@ -112,7 +112,7 @@
                     <form id="passwordForm">
                         <div class="mb-3">
                             <label for="userPassword" class="form-label">Votre Mot de Pass</label>
-                            <input name="userPassword" type="text" class="form-control" id="userPassword">
+                            <input name="userPassword" type="password" class="form-control" id="userPassword">
                             <span class="text-danger" id="incorrectPassword"> </span>
                         </div>
 
@@ -122,7 +122,7 @@
                     
                             <div class="row g-3 mb-3">
                               <div class="col-12">
-                                <label for="login" class="form-label">Login/label>
+                                <label for="login" class="form-label">Login </label>
                                 <input type="text" class="form-control" name="login" id="login">
                               </div>
                               <div class="col-12">

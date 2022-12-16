@@ -76,9 +76,15 @@ window.onload = () => {
 
                 console.log("decripted group key", groupKey)
 
-                const tempKey = generateSceureKey();
+                const tempKey = generateSceureKey(12);
 
-                newEncryptedKey = encryptData(groupKey, tempKey)
+
+                console.log("temp add key", tempKey)
+
+                newEncryptedKey = encryptData(tempKey, groupKey)
+
+                console.log("Encrypted group key with  admin password", newEncryptedKey)
+
 
                 data = {
                     newEncryptedKey, 
@@ -88,7 +94,7 @@ window.onload = () => {
 
                 }
                 result = await  axios.post(url + '/assignGroupAdmin', data) 
-                window.location.reload()  ;       
+                //window.location.reload()  ;       
 
                 
                
@@ -122,9 +128,13 @@ window.onload = () => {
             const result = await axios.post(url + '/verify', {password});
          
             if (result.data.isCorrectPassword) {
-                groupKey = encryptData(password, generateSceureKey());
+                let init =  generateSceureKey()
+                groupKey = encryptData(password, init);
 
-            console.log(groupKey);
+            console.log("iNITIT  GRoup key ",init);
+
+
+            console.log("Encrypted GRoup key ",groupKey);
 
                 data = {
                     groupKey,
@@ -133,7 +143,7 @@ window.onload = () => {
 
                 console.log(data)
                 await saveGoupe(url + '/save', data); 
-                window.location.reload()  ;       
+               window.location.reload()  ;       
             }
 
           

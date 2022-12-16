@@ -38,7 +38,7 @@ window.onload = () => {
         try {
             if(isSamePassword) {
                 let result = await axios.post(url + '/users/verify', {password:passwordTemp.value});
-                console.log(result);
+
                 console.log(userId);
 
                 if (result.data.isCorrectPassword) {
@@ -46,28 +46,38 @@ window.onload = () => {
                     tempPasswordIncorrect.innerHTML = ""
 
                     result = await  axios.post(url + '/users/getPrivateKey', {userId}) 
+
                     let userPrivatekey = result.data.key;
                     console.log("Encrypted user private key with temporary password", userPrivatekey)
+
+                
+                    const val = passwordTemp.value.trim();
         
-                    userPrivatekey = decryptData(passwordTemp.value, userPrivatekey);
-                    console.log("It's OK")
+                    userPrivatekey = decryptData(val,userPrivatekey);
+                    console.log("mmm")
+                    console.log("decrypted user private key from temporary password ", userPrivatekey)
 
                     const data = {
                         password : password.value,
                         userPrivatekey,
                         userId
                     }
-                    console.log(data);
+                   
+                 
                     data.userPrivatekey = encryptData(data.password, userPrivatekey);
+
+                    console.log("decrypted user private key from temporary password ", data.userPrivatekey)
+
+                    console.log(data)
                     
 
                     result = await axios.post(url + '/users/changeUserTempPassword', data);
 
                     if (result.data.success) {
                         window.location = '/logout'
-                   
-
+                
                     }
+
                 }else{
                     tempPasswordIncorrect.innerHTML = "Mot de passe temporaire incorrect";
                 }
