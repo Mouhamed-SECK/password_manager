@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Repository\PasswordRepository;
+
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,5 +54,18 @@ class PasswordController extends AbstractController
 
         return $this->json(['code' => 200, 'success' => TRUE], 200);
     }
+
+
+
+
+    #[Route('/password/getPassword', name: 'admin.group.key')]
+    public function getPassword(PasswordRepository $repository, Request $request, EntityManagerInterface $manager): Response
+    {
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+        return $this->json(['code' => 200, 'password' => $repository->find($data['passwordId'])->getEncryptedPassword()], 200);
+    }
+
 
 }

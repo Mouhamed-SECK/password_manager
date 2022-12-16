@@ -10,23 +10,19 @@ window.onload = () => {
 
 
     
-
+    
     let privateKey;
-    let encryptedPassword;
+    let passwordId;
 
     showPasswordBtns=  document.querySelectorAll('.showpassword')
     showPasswordBtns.forEach(btn => {
         btn.addEventListener('click', function handleClick(event) {
             privateKey = btn.getAttribute('data-privateKey').toString().trim()
-            encryptedPassword = btn.getAttribute('data-encryptedPassword').toString().trim()
+            passwordId = btn.getAttribute('data-passwordId')
 
     
         });
       });
-
- 
-
-   
     PasswordForm.addEventListener("submit", onSubmit);
 
     async function onSubmit(event) {
@@ -38,8 +34,7 @@ window.onload = () => {
 
         event.preventDefault();
 
-        console.log(privateKey)
-        console.log(encryptedPassword)
+    
 
             let  result = await axios.post(url + '/users/verify', {password});
     
@@ -48,12 +43,20 @@ window.onload = () => {
                decryptedData.style.display = "block";
 
 
-      
-   
-               const key = decryptData(password, privateKey); 
-               const Realpassword  = decryptData(key, encryptedPassword);
+               console.log(passwordId)
 
-               console.log("DEcrypted Data ",  'uC5!cW5(pY3$zI5<hK1#')
+
+
+              result = await axios.post(url + '/password/getPassword', {passwordId});
+   
+                const key = decryptData(password, privateKey); 
+               // const Realpassword  = decryptData(key, result.data.password);
+
+
+                  //console.log(key)
+                  //console.log(Realpassword)
+
+
 
 
             } else {

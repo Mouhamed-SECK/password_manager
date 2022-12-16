@@ -1,64 +1,75 @@
 window.onload = () => {
     const url = window.location.origin;
-    const UserForm = document.querySelector('#createUserForm');
+    const UserForm = document.querySelector('#userForm');
 
     const incorrectPassword = document.querySelector('#incorrectPassword');
 
-    let groupId = parseInt(document.querySelector('#group-id').value);
-   
 
-    
+
+    const email = document.querySelector('#email');
+    const firstname = document.querySelector('#firstname');
+    const lastname = document.querySelector('#lastname');
+
+    const group = document.getElementById('group');
+
+    let assignedGroup;
+    let encryptedKey;
+
+    group.addEventListener('change', function handleChange(event) {
+         assignedGroup = event.target.value; 
+          encryptedKey =  group.options[group.selectedIndex].getAttribute("data-privateKey")
+
+
+   
+    });
 
     UserForm.addEventListener("submit", onSubmit);
+
  
     async function onSubmit(event) {
 
-        let password = document.getElementById("password").value;
-        let email = document.getElementById("email").value;
-        let firstname = document.getElementById("firstname").value;
-        let lastname = document.getElementById("lastname").value;
+    const password = document.querySelector('#userPassword').value;
+
         
         event.preventDefault();
 
 
-        data = {
-            email,
-            firstname,
-            lastname,
+         data = {
+            email : email.value,
+            firstname : firstname.value,
+            lastname : lastname.value,
+            group : assignedGroup,
+            encryptedKey
         }
 
         console.log(data);
-        console.log(groupId);
+                          
 
      
         try {
 
+
             let result = await axios.post(url + '/admin/groups/verify', {password});
+
 
     
             if (result.data.isCorrectPassword) {
                 console.log("it's okay");
                 incorrectPassword.innerText = ""
 
-               
-                result = await  axios.post(url + '/admin/groups/getGroupKey', {groupId}) 
-                groupKey = result.data.key;
-                console.log("Encrypted group key with super admin password", groupKey)
-
-
-                groupKey = decryptData(password, groupKey);
+                const groupKey = decryptData(password, data.encryptedKey);
 
                 console.log("decripted group key", groupKey)
 
-                const tempPassword = generateSceureKey();
+                const tempPassword = generateSceureKey(12);
                 data.tempPassword = tempPassword;
 
-                data.privateKey = encryptData(groupKey, tempPassword)
-
+                data.encryptedKey = encryptData(groupKey, tempPassword)
 
                 console.log(data)
 
-                result = await  axios.post(url + '/admin/users/createGroupUser', data) 
+
+                result = await  axios.post(url + '/admin/users/saveAdmin', data) 
 
                 if (result.data.success) {
                     window.location.reload() ;     
@@ -66,13 +77,7 @@ window.onload = () => {
                 } else {
                     incorrectPassword.innerHTML ="Cet utilisateur existe déjà";
 
-                }
-
-
-            
-
-                
-               
+                }     
             } else {
                 incorrectPassword.innerText = "Votre mot de pass est incorrect"
             }
@@ -81,11 +86,11 @@ window.onload = () => {
             if (error.response.status === 403) {
                 window.location = '/login'
             }
-        }
+        } 
 
 
 
-    }
+    } 
 
 
    

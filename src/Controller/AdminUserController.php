@@ -8,6 +8,8 @@ use App\Form\UserRegistrationType;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Repository\UserRepository;
+use App\Repository\GroupeRepository;
+
 use App\Service\SendEmailService;
 use App\Service\JWTService;
 use App\Service\PasswordGenerator;
@@ -67,6 +69,7 @@ class AdminUserController extends AbstractController
         if(!$admin->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
+
         $data = $request->getContent();
         $data = json_decode($data, true);
 
@@ -116,35 +119,71 @@ class AdminUserController extends AbstractController
         }
     }
 
+    #[Route('/admin/users/getGroupKey', name: 'admin.group.key')]
+    public function getGroupKey(Request $request, EntityManagerInterface $manager, GroupeRepository $groupeRepository): Response
+    {
+    
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+        return $this->json(['code' => 200, 'key' => $groupeRepository->find($data['groupId'])->getPrivateKey()], 200);
+    }
 
 
-
-
-    #[Route('/admin/users/new', name: 'admin.users.new')]
-    public function new(Request $request, EntityManagerInterface $manager, SendEmailService $mail, JWTService $jwt): Response
+    #[Route('/admin/users/saveAdmin', name: 'admin.users.saveAdmin')]
+    public function saveAdmin(Request $request, EntityManagerInterface $manager, UserRepository $usersRepository,SendEmailService $mail, JWTService $jwt, GroupeRepository $groupeRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        if(!$user->isIsTemporaryPasswordChange()){
+        $admin = $this->get('security.token_storage')->getToken()->getUser();
+        if(!$admin->isIsTemporaryPasswordChange()){
             return $this->redirectToRoute('security.reset-temporary-password');
         }
 
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
         $user = new User();
 
+    
 
-        $form =  $this->createForm(UserRegistrationType::class, $user);  
-        $form->handleRequest($request) ;
+        if ($usersRepository->findOneByEmail($data['email']) == null) { 
+            $user->setLogin($data['email']);
+
+            $user->setPrivateKey($data['encryptedKey']);
+            $user->setEmail($data['email']);
+            $user->setFirstname($data['firstname']);
+            $user->setLastname($data['lastname']);
+           
+            $user->setPassword($data['tempPassword']);
+            $user->setRoles(["ROLE_USER, ROLE_ADMIN"]);
 
 
+            $group = $data['group'];
 
-        if ($form->isSubmitted() && $form->isValid()) { 
-            $user->setLogin($user->getEmail());
-            //
-          
+            $id  = intval(trim($group));
+
+            $groups = $groupeRepository->findAll();
+
+
+            $assignedGRoup = null;
+            foreach ($groups as $g) {
+
+                if($g->getId() == $id ){
+                    $assignedGRoup = $g;
+                    break;
+                }
+               
+            }
+
+            $user->setManagedGroup($assignedGRoup);
+  
+
+            $assignedGRoup->setGroupAdmin($user);
+
             $manager->persist($user);
+            
             $manager->flush();
-
 
             $header = [
                 'typ' => 'JWT',
@@ -167,13 +206,32 @@ class AdminUserController extends AbstractController
                 compact('user', 'token')
             );
 
-            return $this->redirectToRoute('admin.users.index');
+            return $this->json(['code' => 200 , 'success' => TRUE], 200);
+        } else {
+            return $this->json(['code' => 200 , 'success' => FALSE], 200);
 
         }
 
+    }
+
+    #[Route('/admin/users/new', name: 'admin.users.new')]
+    public function new(Request $request, EntityManagerInterface $manager, SendEmailService $mail, JWTService $jwt, GroupeRepository $repo): Response
+    {
+        
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        if(!$user->isIsTemporaryPasswordChange()){
+            return $this->redirectToRoute('security.reset-temporary-password');
+        }
+
+        $groups = $repo->findAll();
+        
+
+
         return $this->render('admin/users/new.html.twig', [
             'controller_name' => 'AdminUserController',
-            'form' => $form->createView(),
+            'groups' => $groups
         ]);
     }
 
@@ -192,23 +250,21 @@ class AdminUserController extends AbstractController
 
             //On vérifie que l'utilisateur existe et n'a pas encore activé son compte
             if($user && !$user->isIsVerified()){
-                $temporaryPassword = "";
-                if ($user->getPassword()=="") {
-                    $temporaryPassword = $passwordGenerator->generate();
+               
 
-                } else {
-                    $temporaryPassword =$user->getPassword();
-                    $hash = $encoder->encodePassword($user,$temporaryPassword);
-                    $user->setPassword($hash);
+    
+                $temporaryPassword =$user->getPassword();
+                $hash = $encoder->encodePassword($user,$temporaryPassword);
+                $user->setPassword($hash);
 
-                    $mail->send(
-                        'no-reply@myPassword.fr',
-                        $user->getEmail(),
-                        'Votre mot de Pass temporaire',
-                        'temp_password',
-                        compact('user', 'temporaryPassword')
-                    );
-                }
+                $mail->send(
+                    'no-reply@myPassword.fr',
+                    $user->getEmail(),
+                    'Votre mot de Pass temporaire',
+                    'temp_password',
+                    compact('user', 'temporaryPassword')
+                );
+            
 
                 $user->setIsVerified(true);
                 $em->flush($user);

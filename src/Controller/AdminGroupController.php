@@ -117,8 +117,7 @@ class AdminGroupController extends AbstractController
     #[Route('/admin/groups/getGroupKey', name: 'admin.group.key')]
     public function getGroupKey(Request $request, EntityManagerInterface $manager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
+    
         $data = $request->getContent();
         $data = json_decode($data, true);
 

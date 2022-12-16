@@ -122,7 +122,14 @@ window.onload = () => {
             const result = await axios.post(url + '/verify', {password});
          
             if (result.data.isCorrectPassword) {
-                groupKey = encryptData(password, generateSceureKey());
+                const init = generateSceureKey();
+
+                groupKey = encryptData(password, init);
+
+                console.log("GRoup key at creation : ", init)
+
+                console.log("Encrypted GRoup key at creation : ", groupKey)
+
 
             console.log(groupKey);
 

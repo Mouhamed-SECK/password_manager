@@ -13,8 +13,10 @@ class Groupe
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
+
+
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
@@ -104,13 +106,6 @@ class Groupe
     public function setPrivateKey(string $privateKey)
     {
         $this->privateKey = $privateKey;
-    }
-
-
-
-    public function setPrivateKey($privateKey) 
-    {
-         $this->privateKey = $privateKey;
     }
 
 

@@ -20,20 +20,59 @@
                             </div>
                             <div class="card-body">
                             <div class="row" >
-                                 {{form_start(form)}} 
-                                <form  method='post' lass="row align-items-center justify-content-center">
-                                    <div  class='col-md-6'> 
-                                       <div class="row g-3 align-items-center">
+                       
+                                <form method="post" id="userForm" class="row align-items-center justify-content-center">
+                                  
+                                 
+
+                                        <div class="mb-3">
+                                            <label for="firstname" class="form-label">Prenom</label>
+                                            <input type="text" class="form-control" id="firstname" placeholder="Saisir le prenom">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="lastname" class="form-label">Nom</label>
+                                            <input type="text" class="form-control" id="lastname" placeholder="Saisir le nom">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" placeholder="Saisir l'adress email de l'utilisateur">
+                                        </div>
+
+                                         <div class="mb-3">
+
+                                                 <label for="group">Choisir un groupe :</label>
+
+                                                <select class="form-select" id="group">
+                                                    <option  name="group" value="">--Choisir un groupe pour l'admin--</option>
+
+
+                                                    {% for group in groups %}
+
+                                                        <option data-privateKey={{group.privateKey}} value="{{group.id}} ">{{group.title}}</option>
+
+                                                    {%  endfor %}
+                                                    
+                                                
+                                                </select>
+
+                                        </div>
+
+
+
+                                        <div class="mb-3">
+                                            <label for="userPassword" class="form-label">Votre Mot de Pass</label>
+                                            <input name="userPassword" type="password" class="form-control" id="userPassword">
+                                            <span class="text-danger" id="incorrectPassword"> </span>
+                                        </div>
+
+                                  
+                                        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+                       
                                     
-              
-                     
-						                {{form_widget(form)}}
 
-                                            <button type="submit" class="btn btn-primary mt-4">Submit</button>
-
-                                       {{form_end(form)}}
-                                    </div>
-
+                                    
                                  
                                 </form>
                             </div>
@@ -41,4 +80,15 @@
                         </div>
                     </div>
                 </div>
+
+
+
+      
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>    
+
+    <script src="/js/crypting.js"> </script>
+    <script src="/js/manageUser.js"> </script>
+
+
 {% endblock %}
